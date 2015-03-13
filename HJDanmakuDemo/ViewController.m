@@ -42,7 +42,8 @@
     [self.view insertSubview:_danmakuView aboveSubview:_imgView];
     
     NSString *danmakufile = [[NSBundle mainBundle] pathForResource:@"danmakufile" ofType:nil];
-    [_danmakuView prepareWithDanmakuFile:danmakufile];
+    NSArray *danmakus = [NSArray arrayWithContentsOfFile:danmakufile];
+    [_danmakuView prepareDanmakus:danmakus];
 }
 
 - (void)onTimeCount

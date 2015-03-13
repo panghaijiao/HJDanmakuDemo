@@ -38,7 +38,7 @@
 @property (nonatomic, readonly) BOOL isPrepared;
 @property (nonatomic, readonly) BOOL isPlaying;
 
-- (void)prepareWithDanmakuFile:(NSString *)danmakuFile;
+- (void)prepareDanmakus:(NSArray *)danmakus;
 
 - (void)start;
 - (void)pause;
