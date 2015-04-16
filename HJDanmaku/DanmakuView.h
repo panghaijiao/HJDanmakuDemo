@@ -9,14 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#define DanmakuCommonDuration     6
-#define DanmakuFontSize           20
-#define DanmakuLargeFontSize      22
-#define DanmakuPaintHeight        24
+@interface DanmakuConfiguration : NSObject
 
-#define DanmakuMaxLRShowCount     20
-#define DanmakuMaxShowCount       30
+@property (nonatomic, assign) CGFloat duration;
+@property (nonatomic, assign) CGFloat paintHeight;
 
+@property (nonatomic, assign) CGFloat fontSize;
+@property (nonatomic, assign) CGFloat largeFontSize;
+
+@property (nonatomic, assign) CGFloat maxLRShowCount;
+@property (nonatomic, assign) CGFloat maxShowCount;
+
+@end
+
+//_______________________________________________________________________________________________________________
 
 // 时间(毫秒),类型(0:向左滚动 1:顶部 2底部),字体大小(0:中字体 1:大字体),颜色(16进制),用户ID
 // "p": "25,1,0,FFFFFF,0",
@@ -30,6 +36,7 @@
 
 @end
 
+//_______________________________________________________________________________________________________________
 
 @protocol DanmakuDelegate;
 @interface DanmakuView : UIView
@@ -37,6 +44,8 @@
 @property (nonatomic, weak) id<DanmakuDelegate> delegate;
 @property (nonatomic, readonly) BOOL isPrepared;
 @property (nonatomic, readonly) BOOL isPlaying;
+
+- (instancetype)initWithFrame:(CGRect)frame Configuration:(DanmakuConfiguration *)configuration;
 
 - (void)prepareDanmakus:(NSArray *)danmakus;
 
@@ -48,6 +57,8 @@
 - (void)sendDanmakuSource:(DanmakuSource *)danmakuSource;
 
 @end
+
+//_______________________________________________________________________________________________________________
 
 @protocol DanmakuDelegate <NSObject>
 

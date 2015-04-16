@@ -37,7 +37,15 @@
     _imgView.animationDuration = 20;
     [_imgView startAnimating];
     
-    _danmakuView = [[DanmakuView alloc] initWithFrame:self.view.bounds];
+    CGRect rect =  CGRectMake(0, 2, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds)-4);
+    DanmakuConfiguration *configuration = [[DanmakuConfiguration alloc] init];
+    configuration.duration = 6.5;
+    configuration.paintHeight = 21;
+    configuration.fontSize = 17;
+    configuration.largeFontSize = 19;
+    configuration.maxLRShowCount = 30;
+    configuration.maxShowCount = 45;
+    _danmakuView = [[DanmakuView alloc] initWithFrame:rect Configuration:configuration];
     _danmakuView.delegate = self;
     [self.view insertSubview:_danmakuView aboveSubview:_imgView];
     
@@ -83,8 +91,8 @@
 {
     int time = ([self danmakuViewGetPlayTime:nil]+1)*1000;
     int type = rand()%3;
-    NSString *pString = [NSString stringWithFormat:@"%d,%d,0,00EBFF,125", time, type];
-    NSString *mString = @"olinone.com";
+    NSString *pString = [NSString stringWithFormat:@"%d,%d,1,00EBFF,125", time, type];
+    NSString *mString = @"😊😊olinone.com😊😊";
     DanmakuSource *danmakuSource = [DanmakuSource createWithP:pString M:mString];
     [_danmakuView sendDanmakuSource:danmakuSource];
 }
