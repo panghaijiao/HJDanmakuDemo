@@ -11,14 +11,16 @@
 
 @interface DanmakuConfiguration : NSObject
 
-@property (nonatomic, assign) CGFloat duration;
-@property (nonatomic, assign) CGFloat paintHeight;
+@property (nonatomic) CGFloat duration;
+@property (nonatomic) CGFloat paintHeight;
 
-@property (nonatomic, assign) CGFloat fontSize;
-@property (nonatomic, assign) CGFloat largeFontSize;
+@property (nonatomic) CGFloat fontSize;
+@property (nonatomic) CGFloat largeFontSize;
 
-@property (nonatomic, assign) CGFloat maxLRShowCount;
-@property (nonatomic, assign) CGFloat maxShowCount;
+@property (nonatomic) CGFloat maxLRShowCount;
+@property (nonatomic) CGFloat maxShowCount;
+
+@property (nonatomic) BOOL    isShowLineWhenSelf;
 
 @end
 
@@ -47,7 +49,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame Configuration:(DanmakuConfiguration *)configuration;
 
-- (void)prepareDanmakus:(NSArray *)danmakus;
+//DanmakuSource组成的数组
+- (void)prepareDanmakuSources:(NSArray *)danmakuSources;
 
 - (void)start;
 - (void)pause;
@@ -55,6 +58,15 @@
 - (void)stop;
 
 - (void)sendDanmakuSource:(DanmakuSource *)danmakuSource;
+
+@end
+
+@interface DanmakuView (Deprecated)
+
+//字典组成的数组
+// "p": "25,1,0,FFFFFF,0",
+// "m": "olinone.com"
+- (void)prepareDanmakus:(NSArray *)danmakus;
 
 @end
 

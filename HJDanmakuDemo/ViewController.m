@@ -51,7 +51,7 @@
     
     NSString *danmakufile = [[NSBundle mainBundle] pathForResource:@"danmakufile" ofType:nil];
     NSArray *danmakus = [NSArray arrayWithContentsOfFile:danmakufile];
-    [_danmakuView prepareDanmakus:danmakus];
+    [_danmakuView prepareDanmakus:danmakus]; // 新版本推荐 prepareDanmakuSources
 }
 
 - (void)onTimeCount
