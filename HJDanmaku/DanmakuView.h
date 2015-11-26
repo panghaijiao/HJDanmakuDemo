@@ -4,7 +4,7 @@
 //
 //  Created by Haijiao on 15/3/12.
 //  Copyright (c) 2015年 olinone. All rights reserved.
-//
+//  http://www.olinone.com
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -49,7 +49,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame Configuration:(DanmakuConfiguration *)configuration;
 
-//DanmakuSource组成的数组
+// DanmakuSource组成的数组
 - (void)prepareDanmakuSources:(NSArray *)danmakuSources;
 
 - (void)start;
@@ -63,7 +63,7 @@
 
 @interface DanmakuView (Deprecated)
 
-//字典组成的数组
+// 字典组成的数组，已弃用，推荐prepareDanmakuSources
 // "p": "25,1,0,FFFFFF,0",
 // "m": "olinone.com"
 - (void)prepareDanmakus:(NSArray *)danmakus;
@@ -75,10 +75,14 @@
 @protocol DanmakuDelegate <NSObject>
 
 @required
+// 视频播放进度，单位秒
 - (float)danmakuViewGetPlayTime:(DanmakuView *)danmakuView;
+
+// 视频播放缓冲状态，如果设为YES，不会绘制新弹幕，已绘制弹幕会继续动画直至消失
 - (BOOL)danmakuViewIsBuffering:(DanmakuView *)danmakuView;
 
 @optional
+// 弹幕初始化完成
 - (void)danmakuViewPerpareComplete:(DanmakuView *)danmakuView;
 
 @end

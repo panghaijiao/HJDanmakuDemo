@@ -13,7 +13,6 @@
 		A0008CB11AB19AFC009550D7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0008CAF1AB19AFC009550D7 /* Main.storyboard */; };
 		A0008CB31AB19AFC009550D7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0008CB21AB19AFC009550D7 /* Images.xcassets */; };
 		A0008CB61AB19AFC009550D7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0008CB41AB19AFC009550D7 /* LaunchScreen.xib */; };
-		A0008CCE1AB19B9B009550D7 /* libDanmakuView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0008CCD1AB19B9B009550D7 /* libDanmakuView.a */; };
 		A0008CD61AB19C13009550D7 /* 0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0008CD01AB19C13009550D7 /* 0.jpg */; };
 		A0008CD71AB19C13009550D7 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0008CD11AB19C13009550D7 /* 1.jpg */; };
 		A0008CD81AB19C13009550D7 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0008CD21AB19C13009550D7 /* 2.jpg */; };
@@ -21,6 +20,7 @@
 		A0008CDA1AB19C13009550D7 /* 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0008CD41AB19C13009550D7 /* 4.jpg */; };
 		A0008CDB1AB19C13009550D7 /* 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0008CD51AB19C13009550D7 /* 5.jpg */; };
 		A0008CDD1AB19E38009550D7 /* danmakufile in Resources */ = {isa = PBXBuildFile; fileRef = A0008CDC1AB19E38009550D7 /* danmakufile */; };
+		A002E9A21C075F1500F61F94 /* DanmakuView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A002E9A11C075F1500F61F94 /* DanmakuView.a */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +35,6 @@
 		A0008CB21AB19AFC009550D7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A0008CB51AB19AFC009550D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		A0008CCC1AB19B9B009550D7 /* DanmakuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DanmakuView.h; sourceTree = "<group>"; };
-		A0008CCD1AB19B9B009550D7 /* libDanmakuView.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libDanmakuView.a; sourceTree = "<group>"; };
 		A0008CD01AB19C13009550D7 /* 0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 0.jpg; sourceTree = "<group>"; };
 		A0008CD11AB19C13009550D7 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		A0008CD21AB19C13009550D7 /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
@@ -43,6 +42,7 @@
 		A0008CD41AB19C13009550D7 /* 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4.jpg; sourceTree = "<group>"; };
 		A0008CD51AB19C13009550D7 /* 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 5.jpg; sourceTree = "<group>"; };
 		A0008CDC1AB19E38009550D7 /* danmakufile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = danmakufile; sourceTree = SOURCE_ROOT; };
+		A002E9A11C075F1500F61F94 /* DanmakuView.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = DanmakuView.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A0008CCE1AB19B9B009550D7 /* libDanmakuView.a in Frameworks */,
+				A002E9A21C075F1500F61F94 /* DanmakuView.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,7 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				A0008CCC1AB19B9B009550D7 /* DanmakuView.h */,
-				A0008CCD1AB19B9B009550D7 /* libDanmakuView.a */,
+				A002E9A11C075F1500F61F94 /* DanmakuView.a */,
 			);
 			path = HJDanmaku;
 			sourceTree = SOURCE_ROOT;
