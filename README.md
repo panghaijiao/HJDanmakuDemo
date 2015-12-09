@@ -1,6 +1,6 @@
 # HJDanmakuDemo
 
-iOS开发，iOS系统弹幕源码 OC弹幕源码
+iOS系统上弹幕源码实现
 
 更多细节请访问网站
 
