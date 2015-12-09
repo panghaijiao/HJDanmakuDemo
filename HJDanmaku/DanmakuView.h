@@ -20,6 +20,7 @@
 @property (nonatomic) CGFloat maxLRShowCount;
 @property (nonatomic) CGFloat maxShowCount;
 
+//发送弹幕是否显示下划线
 @property (nonatomic) BOOL    isShowLineWhenSelf;
 
 @end
