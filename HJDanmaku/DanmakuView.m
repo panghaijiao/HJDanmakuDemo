@@ -56,7 +56,7 @@
 
 @implementation DanmakuView
 
-- (instancetype)initWithFrame:(CGRect)frame Configuration:(DanmakuConfiguration *)configuration;
+- (instancetype)initWithFrame:(CGRect)frame configuration:(DanmakuConfiguration *)configuration;
 {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
@@ -67,7 +67,7 @@
         _danmakuTime = [[DanmakuTime alloc] init];
         _danmakuFilter = [[DanmakuFilter alloc] init];
         _danmakuRenderer = [[DanmakuRenderer alloc] init];
-        _danmakuRenderer = [[DanmakuRenderer alloc] initWithCanvas:self Configuration:configuration];
+        _danmakuRenderer = [[DanmakuRenderer alloc] initWithCanvas:self configuration:configuration];
         [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
@@ -96,7 +96,7 @@
                 NSString *mString = dic[@"m"];
                 DanmakuSource *danmakuSource = [DanmakuSource createWithP:pString M:mString];
                 DanmakuBaseModel *danmaku = [DanmakuFactory createDanmakuWithDanmakuSource:danmakuSource
-                                                                             Configuration:self.configuration];
+                                                                             configuration:self.configuration];
                 if (danmaku) {
                     [danmakus addObject:danmaku];
                 }
@@ -129,7 +129,7 @@
         for (DanmakuSource *danmakuSource in items.objectEnumerator) {
             if ([danmakuSource isKindOfClass:[DanmakuSource class]]) {
                 DanmakuBaseModel *danmaku = [DanmakuFactory createDanmakuWithDanmakuSource:danmakuSource
-                                                                             Configuration:self.configuration];
+                                                                             configuration:self.configuration];
                 if (danmaku) {
                     [danmakus addObject:danmaku];
                 }
@@ -210,17 +210,17 @@
     
     if (self.isPreFilter || interval<0 || interval>DanmakuFilterInterval) {
         self.isPreFilter = NO;
-        self.curDanmakus = [self.danmakuFilter filterDanmakus:self.danmakus Time:_danmakuTime];
+        self.curDanmakus = [self.danmakuFilter filterDanmakus:self.danmakus time:_danmakuTime];
     }
     
     BOOL isBuffering = [self.delegate danmakuViewIsBuffering:self];
-    [self.danmakuRenderer drawDanmakus:self.curDanmakus Time:_danmakuTime IsBuffering:isBuffering];
+    [self.danmakuRenderer drawDanmakus:self.curDanmakus time:_danmakuTime isBuffering:isBuffering];
     
     _timeCount+=_frameInterval;
     if (_timeCount>DanmakuFilterInterval) {
         _timeCount = 0;
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSArray *filterArray = [self.danmakuFilter filterDanmakus:self.danmakus Time:_danmakuTime];
+            NSArray *filterArray = [self.danmakuFilter filterDanmakus:self.danmakus time:_danmakuTime];
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.curDanmakus = filterArray;
             });
@@ -232,7 +232,7 @@
 - (void)sendDanmakuSource:(DanmakuSource *)danmakuSource
 {
     __block DanmakuBaseModel *sendDanmaku = [DanmakuFactory createDanmakuWithDanmakuSource:danmakuSource
-                                                                             Configuration:self.configuration];
+                                                                             configuration:self.configuration];
     if (!sendDanmaku) {
         return;
     }

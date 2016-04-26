@@ -13,6 +13,6 @@
 @interface DanmakuFactory : NSObject
 
 + (DanmakuBaseModel *)createDanmakuWithDanmakuSource:(DanmakuSource *)danmakuSource
-                                       Configuration:(DanmakuConfiguration *)configuration;
+                                       configuration:(DanmakuConfiguration *)configuration;
 
 @end

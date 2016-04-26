@@ -11,6 +11,6 @@
 
 @interface DanmakuFilter : NSObject
 
-- (NSArray *)filterDanmakus:(NSArray *)danmakus Time:(DanmakuTime *)time;
+- (NSArray *)filterDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time;
 
 @end

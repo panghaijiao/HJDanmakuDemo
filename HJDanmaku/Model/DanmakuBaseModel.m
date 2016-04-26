@@ -25,7 +25,7 @@
     
 }
 
-- (float)pxWithScreenWidth:(float)width RemainTime:(float)remainTime
+- (float)pxWithScreenWidth:(float)width remainTime:(float)remainTime
 {
     return -self.size.width;
 }

@@ -11,7 +11,7 @@
 @implementation DanmakuFactory
 
 + (DanmakuBaseModel *)createDanmakuWithDanmakuType:(DanmakuType)type
-                                     Configuration:(DanmakuConfiguration *)configuration
+                                     configuration:(DanmakuConfiguration *)configuration
 {
     DanmakuBaseModel *danmaku = nil;
     switch (type) {
@@ -33,7 +33,7 @@
 }
 
 + (DanmakuBaseModel *)createDanmakuWithDanmakuSource:(DanmakuSource *)danmakuSource
-                                       Configuration:(DanmakuConfiguration *)configuration
+                                       configuration:(DanmakuConfiguration *)configuration
 {
     NSString *pString = danmakuSource.p;
     NSString *mString = danmakuSource.m;
@@ -49,7 +49,7 @@
     DanmakuFont fontSize = [pArray[2] integerValue]%2;
     
     DanmakuBaseModel *danmaku = [DanmakuFactory createDanmakuWithDanmakuType:type
-                                                               Configuration:configuration];
+                                                               configuration:configuration];
     danmaku.time = [pArray[0] floatValue]/1000.0;
     danmaku.text = mString;
     danmaku.textSize = fontSize==DanmakuFontLarge?configuration.largeFontSize:configuration.fontSize;

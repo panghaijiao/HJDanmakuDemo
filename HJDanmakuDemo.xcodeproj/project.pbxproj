@@ -20,13 +20,13 @@
 		A0008CDA1AB19C13009550D7 /* 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0008CD41AB19C13009550D7 /* 4.jpg */; };
 		A0008CDB1AB19C13009550D7 /* 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A0008CD51AB19C13009550D7 /* 5.jpg */; };
 		A0008CDD1AB19E38009550D7 /* danmakufile in Resources */ = {isa = PBXBuildFile; fileRef = A0008CDC1AB19E38009550D7 /* danmakufile */; };
-		A0B8262F1C1887F6004F6953 /* DanmakuView.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8261F1C1887F6004F6953 /* DanmakuView.m */; settings = {ASSET_TAGS = (); }; };
-		A0B826301C1887F6004F6953 /* DanmakuBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826221C1887F6004F6953 /* DanmakuBaseModel.m */; settings = {ASSET_TAGS = (); }; };
-		A0B826311C1887F6004F6953 /* DanmakuTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826241C1887F6004F6953 /* DanmakuTime.m */; settings = {ASSET_TAGS = (); }; };
-		A0B826321C1887F6004F6953 /* DanmakuRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826271C1887F6004F6953 /* DanmakuRenderer.m */; settings = {ASSET_TAGS = (); }; };
-		A0B826331C1887F6004F6953 /* DanmakuRetainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826291C1887F6004F6953 /* DanmakuRetainer.m */; settings = {ASSET_TAGS = (); }; };
-		A0B826341C1887F6004F6953 /* DanmakuFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8262C1C1887F6004F6953 /* DanmakuFactory.m */; settings = {ASSET_TAGS = (); }; };
-		A0B826351C1887F6004F6953 /* DanmakuFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8262E1C1887F6004F6953 /* DanmakuFilter.m */; settings = {ASSET_TAGS = (); }; };
+		A0B8262F1C1887F6004F6953 /* DanmakuView.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8261F1C1887F6004F6953 /* DanmakuView.m */; };
+		A0B826301C1887F6004F6953 /* DanmakuBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826221C1887F6004F6953 /* DanmakuBaseModel.m */; };
+		A0B826311C1887F6004F6953 /* DanmakuTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826241C1887F6004F6953 /* DanmakuTime.m */; };
+		A0B826321C1887F6004F6953 /* DanmakuRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826271C1887F6004F6953 /* DanmakuRenderer.m */; };
+		A0B826331C1887F6004F6953 /* DanmakuRetainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826291C1887F6004F6953 /* DanmakuRetainer.m */; };
+		A0B826341C1887F6004F6953 /* DanmakuFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8262C1C1887F6004F6953 /* DanmakuFactory.m */; };
+		A0B826351C1887F6004F6953 /* DanmakuFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8262E1C1887F6004F6953 /* DanmakuFilter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -201,7 +201,7 @@
 		A0008C9A1AB19AFC009550D7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = olinone;
 				TargetAttributes = {
 					A0008CA11AB19AFC009550D7 = {
@@ -307,6 +307,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -321,7 +322,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -356,7 +357,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -373,6 +374,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/HJDanmaku",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.olinone.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -388,6 +390,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/HJDanmaku",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.olinone.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

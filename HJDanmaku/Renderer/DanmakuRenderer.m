@@ -27,7 +27,7 @@
 
 @implementation DanmakuRenderer
 
-- (instancetype)initWithCanvas:(UIView *)canvas Configuration:(DanmakuConfiguration *)configuration
+- (instancetype)initWithCanvas:(UIView *)canvas configuration:(DanmakuConfiguration *)configuration
 {
     if (self = [super init]) {
         _danmakuLRRetainer = [[DanmakuRetainer alloc] init];
@@ -108,7 +108,7 @@
 }
 
 #pragma mark - Draw
-- (void)drawDanmakus:(NSArray *)danmakus Time:(DanmakuTime *)time IsBuffering:(BOOL)isBuffering
+- (void)drawDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time isBuffering:(BOOL)isBuffering
 {
     int LRShowCount = 0;
     for (NSInteger index=0; index<_drawArray.count;) {

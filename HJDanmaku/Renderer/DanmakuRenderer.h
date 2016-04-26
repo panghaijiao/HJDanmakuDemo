@@ -15,10 +15,10 @@
 
 @property (nonatomic, weak) DanmakuConfiguration *configuration;
 
-- (instancetype)initWithCanvas:(UIView *)canvas Configuration:(DanmakuConfiguration *)configuration;
+- (instancetype)initWithCanvas:(UIView *)canvas configuration:(DanmakuConfiguration *)configuration;
 - (void)updateCanvasFrame;
 
-- (void)drawDanmakus:(NSArray *)danmakus Time:(DanmakuTime *)time IsBuffering:(BOOL)isBuffering;
+- (void)drawDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time isBuffering:(BOOL)isBuffering;
 
 - (void)pauseRenderer;
 - (void)stopRenderer;

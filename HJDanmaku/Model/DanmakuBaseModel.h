@@ -47,7 +47,7 @@ typedef NS_ENUM (NSUInteger, DanmakuFont) {
 
 - (void)measureSizeWithPaintHeight:(CGFloat)paintHeight;
 - (void)layoutWithScreenWidth:(float)width;
-- (float)pxWithScreenWidth:(float)width RemainTime:(float)remainTime;
+- (float)pxWithScreenWidth:(float)width remainTime:(float)remainTime;
 
 - (BOOL)isDraw:(float)curTime;
 - (BOOL)isLate:(float)curTime;

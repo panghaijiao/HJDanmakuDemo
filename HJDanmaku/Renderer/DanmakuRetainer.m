@@ -76,8 +76,8 @@
         return YES;
     }
     float minRemainTime = MIN(danmakuL.remainTime, danmakuR.remainTime);
-    float px1 = [danmakuL pxWithScreenWidth:width RemainTime:(danmakuL.remainTime-minRemainTime)];
-    float px2 = [danmakuR pxWithScreenWidth:width RemainTime:(danmakuR.remainTime-minRemainTime)];
+    float px1 = [danmakuL pxWithScreenWidth:width remainTime:(danmakuL.remainTime-minRemainTime)];
+    float px2 = [danmakuR pxWithScreenWidth:width remainTime:(danmakuR.remainTime-minRemainTime)];
     if (px1+danmakuL.size.width>px2) {
         return YES;
     }

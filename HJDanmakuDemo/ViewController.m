@@ -45,7 +45,7 @@
     configuration.largeFontSize = 19;
     configuration.maxLRShowCount = 30;
     configuration.maxShowCount = 45;
-    _danmakuView = [[DanmakuView alloc] initWithFrame:rect Configuration:configuration];
+    _danmakuView = [[DanmakuView alloc] initWithFrame:rect configuration:configuration];
     _danmakuView.delegate = self;
     [self.view insertSubview:_danmakuView aboveSubview:_imgView];
     

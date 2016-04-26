@@ -48,10 +48,10 @@
 @property (nonatomic, readonly) BOOL isPrepared;
 @property (nonatomic, readonly) BOOL isPlaying;
 
-- (instancetype)initWithFrame:(CGRect)frame Configuration:(DanmakuConfiguration *)configuration;
+- (instancetype)initWithFrame:(CGRect)frame configuration:(DanmakuConfiguration *)configuration;
 
 // DanmakuSource组成的数组
-- (void)prepareDanmakuSources:(NSArray *)danmakuSources;
+- (void)prepareDanmakuSources:(NSArray<DanmakuSource *> *)danmakuSources;
 
 - (void)start;
 - (void)pause;
