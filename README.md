@@ -1,7 +1,7 @@
 # HJDanmakuDemo
 
 ###iOS系统上弹幕源码实现###
-![](http://7pum7o.com1.z0.glb.clouddn.com/danmaku.jpg)
+![](http://7pum7o.com1.z0.glb.clouddn.com/danmaku.jpg =200x)
 
 ---
 
