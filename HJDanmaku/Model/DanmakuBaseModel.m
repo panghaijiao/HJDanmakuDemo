@@ -46,10 +46,10 @@
 
 - (void)layoutWithScreenWidth:(float)width;
 {
-    self.px = [self pxWithScreenWidth:width RemainTime:self.remainTime];
+    self.px = [self pxWithScreenWidth:width remainTime:self.remainTime];
 }
 
-- (float)pxWithScreenWidth:(float)width RemainTime:(float)remainTime
+- (float)pxWithScreenWidth:(float)width remainTime:(float)remainTime
 {
     return -self.size.width+(width+self.size.width)/self.duration*remainTime;
 }
