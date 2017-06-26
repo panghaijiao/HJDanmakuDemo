@@ -33,7 +33,7 @@
 @end
 
 @interface DanmakuView () {
-    NSTimer *_timer;
+    CADisplayLink *_displayLink;
     float _timeCount;
     
     float _frameInterval;
@@ -88,7 +88,7 @@
     self.curDanmakus = nil;
     NSArray *items = danmakus;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
+        
         NSMutableArray *danmakus = [NSMutableArray arrayWithCapacity:items.count];
         for (NSDictionary *dic in items.objectEnumerator) {
             if ([dic isKindOfClass:[NSDictionary class]]) {
@@ -165,11 +165,12 @@
         return;
     }
     self.isPlaying = YES;
-    if (!_timer) {
-        _timer = [NSTimer timerWithTimeInterval:_frameInterval target:self selector:@selector(onTimeCount) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
-        [_timer fire];
+    if (!_displayLink) {
+        _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(onTimeCount)];
+        _displayLink.frameInterval = 60.0 * _frameInterval;
+        [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
+    _displayLink.paused = NO;
 }
 
 - (void)pause
@@ -179,19 +180,16 @@
         return;
     }
     self.isPlaying = NO;
-    if (_timer) {
-        [_timer invalidate];
-        _timer = nil;
-    }
+    _displayLink.paused = YES;
     [self.danmakuRenderer pauseRenderer];
 }
 
 - (void)stop
 {
     self.isPlaying = NO;
-    if (_timer) {
-        [_timer invalidate];
-        _timer = nil;
+    if (_displayLink) {
+        [_displayLink invalidate];
+        _displayLink = nil;
     }
     [self.danmakuRenderer stopRenderer];
 }
@@ -236,7 +234,7 @@
     if (!sendDanmaku) {
         return;
     }
-
+    
     sendDanmaku.isSelfID = self.configuration.isShowLineWhenSelf;
     
     __block NSMutableArray *newDanmakus = [NSMutableArray arrayWithArray:self.danmakus];
