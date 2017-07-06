@@ -27,8 +27,7 @@
 
 @implementation DanmakuRenderer
 
-- (instancetype)initWithCanvas:(UIView *)canvas configuration:(DanmakuConfiguration *)configuration
-{
+- (instancetype)initWithCanvas:(UIView *)canvas configuration:(DanmakuConfiguration *)configuration {
     if (self = [super init]) {
         _danmakuLRRetainer = [[DanmakuRetainer alloc] init];
         _danmakuFTRetainer = [[DanmakuFTRetainer alloc] init];
@@ -40,10 +39,9 @@
     return self;
 }
 
-- (void)setConfiguration:(DanmakuConfiguration *)configuration
-{
+- (void)setConfiguration:(DanmakuConfiguration *)configuration {
     [self stopRenderer];
-    NSInteger count = configuration.maxShowCount+5;
+    NSInteger count = configuration.maxShowCount + 5;
     _drawArray = [[NSMutableArray alloc] initWithCapacity:count];
     _cacheLabels = [[NSMutableArray alloc] initWithCapacity:count];
     _configuration = configuration;
@@ -52,28 +50,26 @@
     _danmakuFBRetainer.configuration = configuration;
 }
 
-- (void)setCanvasFrameSize
-{
+- (void)setCanvasFrameSize {
     _canvasWidth = CGRectGetWidth(self.canvas.frame);
     _danmakuLRRetainer.canvasSize = self.canvas.frame.size;
     _danmakuFTRetainer.canvasSize = self.canvas.frame.size;
     _danmakuFBRetainer.canvasSize = self.canvas.frame.size;
 }
 
-- (void)updateCanvasFrame
-{
+- (void)updateCanvasFrame {
     [self setCanvasFrameSize];
     
     [self.danmakuFTRetainer clear];
     [self.danmakuFBRetainer clear];
-    for (NSInteger index=0; index<_drawArray.count; index++) {
+    for (NSInteger index = 0; index < _drawArray.count; index++) {
         DanmakuBaseModel *danmaku = _drawArray[index];
-        if (danmaku.danmakuType!=DanmakuTypeLR) {
+        if (danmaku.danmakuType != DanmakuTypeLR) {
             danmaku.isShowing = NO;
             [self rendererDanmaku:danmaku];
         }
         
-        if (CGRectGetMaxY(danmaku.label.frame)>CGRectGetHeight(self.canvas.frame)) {
+        if (CGRectGetMaxY(danmaku.label.frame) > CGRectGetHeight(self.canvas.frame)) {
             [self removeDanmaku:danmaku];
             [_drawArray removeObjectAtIndex:index];
         } else {
@@ -83,8 +79,8 @@
 }
 
 #pragma mark - Label
-- (void)removeLabelForDanmaku:(DanmakuBaseModel *)danmaku
-{
+
+- (void)removeLabelForDanmaku:(DanmakuBaseModel *)danmaku {
     UILabel *cacheLabel = danmaku.label;
     if (cacheLabel) {
         [cacheLabel.layer removeAllAnimations];
@@ -93,12 +89,11 @@
     }
 }
 
-- (void)createLabelForDanmaku:(DanmakuBaseModel *)danmaku
-{
+- (void)createLabelForDanmaku:(DanmakuBaseModel *)danmaku {
     if (danmaku.label) {
         return;
     }
-    if (_cacheLabels.count<1) {
+    if (_cacheLabels.count < 1) {
         danmaku.label = [[DanmakuLabel alloc] init];
         danmaku.label.backgroundColor = [UIColor clearColor];
     } else {
@@ -108,22 +103,21 @@
 }
 
 #pragma mark - Draw
-- (void)drawDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time isBuffering:(BOOL)isBuffering
-{
+
+- (void)drawDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time isBuffering:(BOOL)isBuffering {
     int LRShowCount = 0;
-    for (NSInteger index=0; index<_drawArray.count;) {
+    for (NSInteger index = 0; index < _drawArray.count; index++) {
         DanmakuBaseModel *danmaku = _drawArray[index];
         danmaku.remainTime -= time.interval;
-        if (danmaku.remainTime<0) {
+        if (danmaku.remainTime < 0) {
             [self removeDanmaku:danmaku];
             [_drawArray removeObjectAtIndex:index];
             continue;
         }
-        if (danmaku.danmakuType==DanmakuTypeLR) {
+        if (danmaku.danmakuType == DanmakuTypeLR) {
             LRShowCount++;
         }
         [self rendererDanmaku:danmaku];
-        index++;
     }
     if (isBuffering) {
         return;
@@ -132,7 +126,7 @@
         if ([danmaku isLate:time.time]) {
             break;
         }
-        if (_drawArray.count>=self.configuration.maxShowCount && !danmaku.isSelfID) {
+        if (_drawArray.count >= self.configuration.maxShowCount && !danmaku.isSelfID) {
             break;
         }
         if (danmaku.isShowing) {
@@ -141,8 +135,8 @@
         if (![danmaku isDraw:time.time]) {
             continue;
         }
-        if (danmaku.danmakuType==DanmakuTypeLR) {
-            if (LRShowCount>self.configuration.maxLRShowCount && !danmaku.isSelfID) {
+        if (danmaku.danmakuType == DanmakuTypeLR) {
+            if (LRShowCount > self.configuration.maxLRShowCount && !danmaku.isSelfID) {
                 continue;
             } else {
                 LRShowCount++;
@@ -151,19 +145,18 @@
         [self createLabelForDanmaku:danmaku];
         [self rendererDanmakuLabel:danmaku];
         [_drawArray addObject:danmaku];
-        danmaku.remainTime = danmaku.time-time.time+danmaku.duration;
+        danmaku.remainTime = danmaku.time - time.time + danmaku.duration;
         danmaku.retainer = [self getHitDicForType:danmaku.danmakuType];
         [self rendererDanmaku:danmaku];
-        if (danmaku.py>=0) {
-            NSInteger zIndex = danmaku.danmakuType==DanmakuTypeLR?0:10;
+        if (danmaku.py >= 0) {
+            NSInteger zIndex = danmaku.danmakuType == DanmakuTypeLR ? 0: 10;
             [self.canvas insertSubview:danmaku.label atIndex:zIndex];
             danmaku.isShowing = YES;
         }
     }
 }
 
-- (void)removeDanmaku:(DanmakuBaseModel *)danmaku
-{
+- (void)removeDanmaku:(DanmakuBaseModel *)danmaku {
     [danmaku.retainer clearVisibleDanmaku:danmaku];
     danmaku.retainer = nil;
     [danmaku.label removeFromSuperview];
@@ -171,8 +164,7 @@
     [self removeLabelForDanmaku:danmaku];
 }
 
-- (DanmakuRetainer *)getHitDicForType:(DanmakuType)type
-{
+- (DanmakuRetainer *)getHitDicForType:(DanmakuType)type {
     switch (type) {
         case DanmakuTypeLR:return _danmakuLRRetainer;
         case DanmakuTypeFT:return _danmakuFTRetainer;
@@ -181,8 +173,8 @@
 }
 
 #pragma mark - Renderer
-- (void)rendererDanmakuLabel:(DanmakuBaseModel *)danmaku
-{
+
+- (void)rendererDanmakuLabel:(DanmakuBaseModel *)danmaku {
     [danmaku measureSizeWithPaintHeight:self.configuration.paintHeight];
     danmaku.label.alpha = 1;
     danmaku.label.font = [UIFont systemFontOfSize:danmaku.textSize];
@@ -191,20 +183,19 @@
     danmaku.label.underLineEnable = danmaku.isSelfID;
 }
 
-- (void)rendererDanmaku:(DanmakuBaseModel *)danmaku
-{
+- (void)rendererDanmaku:(DanmakuBaseModel *)danmaku {
     [danmaku layoutWithScreenWidth:_canvasWidth];
     if (!danmaku.isShowing) {
         float py = [danmaku.retainer layoutPyForDanmaku:danmaku];
-        if (py<0) {
+        if (py < 0) {
             if (danmaku.isSelfID) {
-                py = danmaku.danmakuType!=DanmakuTypeFB?0:(CGRectGetHeight(self.canvas.frame)-self.configuration.paintHeight);
+                py = danmaku.danmakuType != DanmakuTypeFB ? 0: (CGRectGetHeight(self.canvas.frame) - self.configuration.paintHeight);
             } else {
                 danmaku.remainTime = -1;
             }
         }
         danmaku.py = py;
-    } else if (danmaku.danmakuType!=DanmakuTypeLR) {
+    } else if (danmaku.danmakuType != DanmakuTypeLR) {
         return;
     }
     if (danmaku.isShowing) {
@@ -217,25 +208,24 @@
 }
 
 #pragma mark -
-- (void)pauseRenderer
-{
+
+- (void)pauseRenderer {
     for (DanmakuBaseModel *danmaku in _drawArray.objectEnumerator) {
-        if (danmaku.danmakuType!=DanmakuTypeLR) {
+        if (danmaku.danmakuType != DanmakuTypeLR) {
             continue;
         }
         CALayer *layer = danmaku.label.layer;
         CGRect rect = danmaku.label.frame;
         if (layer.presentationLayer) {
             rect = ((CALayer *)layer.presentationLayer).frame;
-            rect.origin.x-=1;
+            rect.origin.x -= 1;
         }
         danmaku.label.frame = rect;
         [danmaku.label.layer removeAllAnimations];
     }
 }
 
-- (void)stopRenderer
-{
+- (void)stopRenderer {
     for (DanmakuBaseModel *danmaku in _drawArray.objectEnumerator) {
         [danmaku.label removeFromSuperview];
         [self removeLabelForDanmaku:danmaku];

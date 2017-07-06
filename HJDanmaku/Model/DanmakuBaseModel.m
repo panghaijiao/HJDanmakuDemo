@@ -11,8 +11,7 @@
 
 @implementation DanmakuBaseModel
 
-- (void)measureSizeWithPaintHeight:(CGFloat)paintHeight;
-{
+- (void)measureSizeWithPaintHeight:(CGFloat)paintHeight {
     if (self.isMeasured) {
         return;
     }
@@ -20,37 +19,31 @@
     self.isMeasured = YES;
 }
 
-- (void)layoutWithScreenWidth:(float)width;
-{
+- (void)layoutWithScreenWidth:(float)width; {
     
 }
 
-- (float)pxWithScreenWidth:(float)width remainTime:(float)remainTime
-{
+- (float)pxWithScreenWidth:(float)width remainTime:(float)remainTime {
     return -self.size.width;
 }
 
-- (BOOL)isDraw:(float)curTime
-{
-    return self.time>=curTime;
+- (BOOL)isDraw:(float)curTime {
+    return self.time >= curTime;
 }
 
-- (BOOL)isLate:(float)curTime
-{
-    return (curTime+1)<self.time;
+- (BOOL)isLate:(float)curTime {
+    return (curTime + 1) < self.time;
 }
 
 @end
 
 @implementation DanmakuLRModel
 
-- (void)layoutWithScreenWidth:(float)width;
-{
+- (void)layoutWithScreenWidth:(float)width {
     self.px = [self pxWithScreenWidth:width remainTime:self.remainTime];
 }
 
-- (float)pxWithScreenWidth:(float)width remainTime:(float)remainTime
-{
+- (float)pxWithScreenWidth:(float)width remainTime:(float)remainTime {
     return -self.size.width+(width+self.size.width)/self.duration*remainTime;
 }
 
@@ -58,8 +51,7 @@
 
 @implementation DanmakuFTModel
 
-- (void)layoutWithScreenWidth:(float)width;
-{
+- (void)layoutWithScreenWidth:(float)width {
     self.px = (width-self.size.width)/2;
     float alpha = 0;
     if (self.remainTime>0 && self.remainTime<self.duration) {
@@ -76,8 +68,7 @@
 
 @implementation DanmakuLabel
 
-- (void)drawTextInRect:(CGRect)rect
-{
+- (void)drawTextInRect:(CGRect)rect {
     UIColor *textColor = self.textColor;
     
     CGContextRef c = UIGraphicsGetCurrentContext();

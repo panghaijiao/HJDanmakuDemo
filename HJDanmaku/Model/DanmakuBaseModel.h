@@ -19,7 +19,7 @@ typedef NS_ENUM (NSUInteger, DanmakuType) {
 
 typedef NS_ENUM (NSUInteger, DanmakuFont) {
     DanmakuFontNormal = 0,
-    DanmakuFontLarge =1,
+    DanmakuFontLarge  = 1,
 };
 
 @interface DanmakuBaseModel : NSObject

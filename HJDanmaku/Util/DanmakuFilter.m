@@ -11,9 +11,8 @@
 
 @implementation DanmakuFilter
 
-- (NSArray *)filterDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time
-{
-    if (danmakus.count<1) {
+- (NSArray *)filterDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time {
+    if (danmakus.count < 1) {
         return nil;
     }
     DanmakuBaseModel *lastDanmaku = danmakus.lastObject;
@@ -27,13 +26,12 @@
     return [self cutWithDanmakus:danmakus time:time];
 }
 
-- (NSArray *)cutWithDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time
-{
+- (NSArray *)cutWithDanmakus:(NSArray *)danmakus time:(DanmakuTime *)time {
     NSUInteger count = danmakus.count;
-    NSUInteger index, minIndex=0, maxIndex = count-1;
+    NSUInteger index, minIndex = 0, maxIndex = count - 1;
     DanmakuBaseModel *danmaku = nil;
-    while (maxIndex-minIndex>1) {
-        index = (maxIndex+minIndex)/2;
+    while (maxIndex - minIndex > 1) {
+        index = (maxIndex + minIndex) / 2;
         danmaku = danmakus[index];
         if ([danmaku isDraw:time.time]) {
             maxIndex = index;

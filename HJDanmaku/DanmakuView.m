@@ -22,8 +22,7 @@
 
 @implementation DanmakuSource
 
-+ (instancetype)createWithP:(NSString *)p M:(NSString *)m
-{
++ (instancetype)createWithP:(NSString *)p M:(NSString *)m {
     DanmakuSource *danmakuSource = [[DanmakuSource alloc] init];
     danmakuSource.p = p;
     danmakuSource.m = m;
@@ -56,8 +55,11 @@
 
 @implementation DanmakuView
 
-- (instancetype)initWithFrame:(CGRect)frame configuration:(DanmakuConfiguration *)configuration;
-{
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@"frame"];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame configuration:(DanmakuConfiguration *)configuration; {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
         self.userInteractionEnabled = NO;
@@ -65,24 +67,22 @@
         self.configuration = configuration;
         _frameInterval = 0.5;
         _danmakuTime = [[DanmakuTime alloc] init];
-        _danmakuFilter = [[DanmakuFilter alloc] init];
-        _danmakuRenderer = [[DanmakuRenderer alloc] init];
-        _danmakuRenderer = [[DanmakuRenderer alloc] initWithCanvas:self configuration:configuration];
+        self.danmakuFilter = [[DanmakuFilter alloc] init];
+        self.danmakuRenderer = [[DanmakuRenderer alloc] initWithCanvas:self configuration:configuration];
         [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"frame"]) {
         [_danmakuRenderer updateCanvasFrame];
     }
 }
 
-#pragma mark - interface
-- (void)prepareDanmakus:(NSArray *)danmakus
-{
+#pragma mark - Interface
+
+- (void)prepareDanmakus:(NSArray *)danmakus {
     self.isPrepared = NO;
     self.danmakus = nil;
     self.curDanmakus = nil;
@@ -104,7 +104,7 @@
         }
         
         [danmakus sortUsingComparator:^NSComparisonResult(DanmakuBaseModel *obj1, DanmakuBaseModel *obj2) {
-            return obj1.time<obj2.time?NSOrderedAscending:NSOrderedDescending;
+            return obj1.time < obj2.time ? NSOrderedAscending: NSOrderedDescending;
         }];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -137,7 +137,7 @@
         }
         
         [danmakus sortUsingComparator:^NSComparisonResult(DanmakuBaseModel *obj1, DanmakuBaseModel *obj2) {
-            return obj1.time<obj2.time?NSOrderedAscending:NSOrderedDescending;
+            return obj1.time < obj2.time ? NSOrderedAscending: NSOrderedDescending;
         }];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -151,16 +151,14 @@
     });
 }
 
-- (void)start
-{
+- (void)start {
     if (!self.delegate) {
         return;
     }
     [self resume];
 }
 
-- (void)resume
-{
+- (void)resume {
     if (self.isPlaying || !self.isPrepared) {
         return;
     }
@@ -173,8 +171,7 @@
     _displayLink.paused = NO;
 }
 
-- (void)pause
-{
+- (void)pause {
     BOOL isBuffering = [self.delegate danmakuViewIsBuffering:self];
     if (!self.isPlaying || isBuffering) {
         return;
@@ -184,8 +181,7 @@
     [self.danmakuRenderer pauseRenderer];
 }
 
-- (void)stop
-{
+- (void)stop {
     self.isPlaying = NO;
     if (_displayLink) {
         [_displayLink invalidate];
@@ -195,18 +191,18 @@
 }
 
 #pragma mark - Draw
-- (void)onTimeCount
-{
+
+- (void)onTimeCount {
     float playTime = [self.delegate danmakuViewGetPlayTime:self];
-    if (playTime<=0) {
+    if (playTime <= 0) {
         return;
     }
     
-    float interval = playTime-_danmakuTime.time;
+    float interval = playTime -_danmakuTime.time;
     _danmakuTime.time = playTime;
     _danmakuTime.interval = _frameInterval;
     
-    if (self.isPreFilter || interval<0 || interval>DanmakuFilterInterval) {
+    if (self.isPreFilter || interval<0 || interval > DanmakuFilterInterval) {
         self.isPreFilter = NO;
         self.curDanmakus = [self.danmakuFilter filterDanmakus:self.danmakus time:_danmakuTime];
     }
@@ -214,8 +210,8 @@
     BOOL isBuffering = [self.delegate danmakuViewIsBuffering:self];
     [self.danmakuRenderer drawDanmakus:self.curDanmakus time:_danmakuTime isBuffering:isBuffering];
     
-    _timeCount+=_frameInterval;
-    if (_timeCount>DanmakuFilterInterval) {
+    _timeCount += _frameInterval;
+    if (_timeCount > DanmakuFilterInterval) {
         _timeCount = 0;
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSArray *filterArray = [self.danmakuFilter filterDanmakus:self.danmakus time:_danmakuTime];
@@ -226,9 +222,9 @@
     }
 }
 
-#pragma mark - send
-- (void)sendDanmakuSource:(DanmakuSource *)danmakuSource
-{
+#pragma mark - Send
+
+- (void)sendDanmakuSource:(DanmakuSource *)danmakuSource {
     __block DanmakuBaseModel *sendDanmaku = [DanmakuFactory createDanmakuWithDanmakuSource:danmakuSource
                                                                              configuration:self.configuration];
     if (!sendDanmaku) {
@@ -241,13 +237,13 @@
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         DanmakuBaseModel *lastDanmaku = newDanmakus.lastObject;
-        if (newDanmakus.count<1 || sendDanmaku.time>lastDanmaku.time) {
+        if (newDanmakus.count < 1 || sendDanmaku.time > lastDanmaku.time) {
             [newDanmakus addObject:sendDanmaku];
         } else {
             DanmakuBaseModel *tempDanmaku = nil;
-            for (NSInteger index=0; index<newDanmakus.count; index++) {
+            for (NSInteger index = 0; index < newDanmakus.count; index++) {
                 tempDanmaku = newDanmakus[index];
-                if (sendDanmaku.time<tempDanmaku.time) {
+                if (sendDanmaku.time < tempDanmaku.time) {
                     [newDanmakus insertObject:sendDanmaku atIndex:index];
                     break;
                 }
@@ -259,11 +255,6 @@
             self.isPreFilter = YES;
         });
     });
-}
-
-- (void)dealloc
-{
-    [self removeObserver:self forKeyPath:@"frame"];
 }
 
 @end

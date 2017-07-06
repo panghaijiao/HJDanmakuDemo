@@ -18,32 +18,28 @@
 
 @implementation DanmakuRetainer
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         _hitDanmakus = [[NSMutableDictionary alloc] initWithCapacity:self.configuration.maxShowCount+5];;
     }
     return self;
 }
 
-- (void)setCanvasSize:(CGSize)canvasSize
-{
+- (void)setCanvasSize:(CGSize)canvasSize {
     _canvasSize = canvasSize;
-    self.maxPyIndex = canvasSize.height/self.configuration.paintHeight;
+    self.maxPyIndex = canvasSize.height / self.configuration.paintHeight;
 }
 
-- (void)clearVisibleDanmaku:(DanmakuBaseModel *)danmaku
-{
-    u_int8_t pyIndex = danmaku.py/self.configuration.paintHeight;
+- (void)clearVisibleDanmaku:(DanmakuBaseModel *)danmaku {
+    u_int8_t pyIndex = danmaku.py / self.configuration.paintHeight;
     id key = @(pyIndex);
     DanmakuBaseModel *hitDanmaku = self.hitDanmakus[key];
-    if (hitDanmaku==danmaku) {
+    if (hitDanmaku == danmaku) {
         [self.hitDanmakus removeObjectForKey:key];
     }
 }
 
-- (float)layoutPyForDanmaku:(DanmakuBaseModel *)danmaku
-{
+- (float)layoutPyForDanmaku:(DanmakuBaseModel *)danmaku {
     float py = -self.configuration.paintHeight;
     DanmakuBaseModel *tempDanmaku = nil;
     for (u_int8_t index = 0; index<_maxPyIndex; index++) {
@@ -62,30 +58,27 @@
     return py;
 }
 
-- (float )getpyDicForType:(DanmakuType)type Index:(u_int8_t)index
-{
-    return index*self.configuration.paintHeight;
+- (float )getpyDicForType:(DanmakuType)type Index:(u_int8_t)index {
+    return index * self.configuration.paintHeight;
 }
 
-- (BOOL)checkIsWillHitWithWidth:(float)width DanmakuL:(DanmakuBaseModel *)danmakuL DanmakuR:(DanmakuBaseModel *)danmakuR
-{
-    if (danmakuL.remainTime<=0) {
+- (BOOL)checkIsWillHitWithWidth:(float)width DanmakuL:(DanmakuBaseModel *)danmakuL DanmakuR:(DanmakuBaseModel *)danmakuR {
+    if (danmakuL.remainTime <= 0) {
         return NO;
     }
-    if (danmakuL.px+danmakuL.size.width>danmakuR.px) {
+    if (danmakuL.px + danmakuL.size.width > danmakuR.px) {
         return YES;
     }
     float minRemainTime = MIN(danmakuL.remainTime, danmakuR.remainTime);
     float px1 = [danmakuL pxWithScreenWidth:width remainTime:(danmakuL.remainTime-minRemainTime)];
     float px2 = [danmakuR pxWithScreenWidth:width remainTime:(danmakuR.remainTime-minRemainTime)];
-    if (px1+danmakuL.size.width>px2) {
+    if (px1 + danmakuL.size.width > px2) {
         return YES;
     }
     return NO;
 }
 
-- (void)clear
-{
+- (void)clear {
     [_hitDanmakus removeAllObjects];
 }
 
@@ -93,15 +86,13 @@
 
 @implementation DanmakuFTRetainer
 
-- (void)setCanvasSize:(CGSize)canvasSize
-{
+- (void)setCanvasSize:(CGSize)canvasSize {
     [super setCanvasSize:canvasSize];
-    self.maxPyIndex /=2;
+    self.maxPyIndex /= 2;
 }
 
-- (BOOL)checkIsWillHitWithWidth:(float)width DanmakuL:(DanmakuBaseModel *)danmakuL DanmakuR:(DanmakuBaseModel *)danmakuR
-{
-    if (danmakuL.remainTime<=0) {
+- (BOOL)checkIsWillHitWithWidth:(float)width DanmakuL:(DanmakuBaseModel *)danmakuL DanmakuR:(DanmakuBaseModel *)danmakuR {
+    if (danmakuL.remainTime <= 0) {
         return NO;
     }
     return YES;
@@ -111,9 +102,8 @@
 
 @implementation DanmakuFBRetainer
 
-- (float )getpyDicForType:(DanmakuType)type Index:(u_int8_t)index
-{
-    return self.canvasSize.height-self.configuration.paintHeight*(index+1);
+- (float )getpyDicForType:(DanmakuType)type Index:(u_int8_t)index {
+    return self.canvasSize.height - self.configuration.paintHeight * (index + 1);
 }
 
 @end
