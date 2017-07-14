@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "MenuTableViewController.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +17,15 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    MenuTableViewController *vc = [MenuTableViewController new];
+    UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:vc];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = navVC;
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
