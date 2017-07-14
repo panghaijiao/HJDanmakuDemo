@@ -1,6 +1,4 @@
-# HJDanmakuDemo
-
-## 2.0开发中... 
+# HJDanmakuDemo (2.0开发中... )
 
 ###iOS系统上弹幕源码实现###
 ![](http://7pum7o.com1.z0.glb.clouddn.com/danmaku.jpg)
