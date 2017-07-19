@@ -20,4 +20,9 @@ typedef NS_ENUM (NSUInteger, HJDanmakuType) {
     HJDanmakuTypeFB
 };
 
+typedef struct {
+    CGFloat time;
+    CGFloat interval;
+} HJDanmakuTime;
+
 #endif /* HJDanmakuDefines_h */

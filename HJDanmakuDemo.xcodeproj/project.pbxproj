@@ -21,6 +21,7 @@
 		A035329F1F0E1C7D006C1B61 /* HJDanmakuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A035329E1F0E1C7D006C1B61 /* HJDanmakuModel.m */; };
 		A03532AB1F0E232E006C1B61 /* HJDanmakuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A03532AA1F0E232E006C1B61 /* HJDanmakuCell.m */; };
 		A03532AE1F0E2422006C1B61 /* HJDanmakuConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = A03532AD1F0E2422006C1B61 /* HJDanmakuConfiguration.m */; };
+		A036E6C31F1F7FEE00010FFD /* LiveDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A036E6C21F1F7FED00010FFD /* LiveDemoViewController.xib */; };
 		A08143711F18C6400088BD95 /* DemoDanmakuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A08143701F18C6400088BD95 /* DemoDanmakuModel.m */; };
 		A08143741F18C9C40088BD95 /* DemoDanmakuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A08143731F18C9C40088BD95 /* DemoDanmakuCell.m */; };
 		A0B8262F1C1887F6004F6953 /* DanmakuView.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8261F1C1887F6004F6953 /* DanmakuView.m */; };
@@ -61,6 +62,7 @@
 		A03532AA1F0E232E006C1B61 /* HJDanmakuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJDanmakuCell.m; sourceTree = "<group>"; };
 		A03532AC1F0E2422006C1B61 /* HJDanmakuConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJDanmakuConfiguration.h; sourceTree = "<group>"; };
 		A03532AD1F0E2422006C1B61 /* HJDanmakuConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJDanmakuConfiguration.m; sourceTree = "<group>"; };
+		A036E6C21F1F7FED00010FFD /* LiveDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LiveDemoViewController.xib; sourceTree = "<group>"; };
 		A081436F1F18C6400088BD95 /* DemoDanmakuModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoDanmakuModel.h; sourceTree = "<group>"; };
 		A08143701F18C6400088BD95 /* DemoDanmakuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoDanmakuModel.m; sourceTree = "<group>"; };
 		A08143721F18C9C40088BD95 /* DemoDanmakuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoDanmakuCell.h; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				A021F7CE1F18C0C300448501 /* VideoDemoViewController.m */,
 				A021F7D61F18C48200448501 /* LiveDemoViewController.h */,
 				A021F7D71F18C48200448501 /* LiveDemoViewController.m */,
+				A036E6C21F1F7FED00010FFD /* LiveDemoViewController.xib */,
 				A081436F1F18C6400088BD95 /* DemoDanmakuModel.h */,
 				A08143701F18C6400088BD95 /* DemoDanmakuModel.m */,
 				A08143721F18C9C40088BD95 /* DemoDanmakuCell.h */,
@@ -277,6 +280,7 @@
 				A0008CB11AB19AFC009550D7 /* Main.storyboard in Resources */,
 				A0008CB61AB19AFC009550D7 /* LaunchScreen.xib in Resources */,
 				A0008CB31AB19AFC009550D7 /* Images.xcassets in Resources */,
+				A036E6C31F1F7FEE00010FFD /* LiveDemoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,7 +428,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/HJDanmaku",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.olinone.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.olinone.danmaku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -440,7 +444,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/HJDanmaku",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.olinone.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.olinone.danmaku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

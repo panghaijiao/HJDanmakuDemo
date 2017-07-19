@@ -15,7 +15,7 @@
     if (self.isMeasured) {
         return;
     }
-    self.size = CGSizeMake([self.text sizeWithFont:[UIFont systemFontOfSize:self.textSize]].width, paintHeight);
+    self.size = CGSizeMake([self.text sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:self.textSize]}].width, paintHeight);
     self.isMeasured = YES;
 }
 

@@ -10,19 +10,20 @@
 
 @interface HJDanmakuConfiguration ()
 
-@property (nonatomic) HJDanmakuMode danmakuModel;
+@property (nonatomic) HJDanmakuMode danmakuMode;
 
 @end
 
 @implementation HJDanmakuConfiguration
 
 - (instancetype)init {
-    return [self initWithDanmakuModel:HJDanmakuModeVideo];
+    return [self initWithDanmakuMode:HJDanmakuModeVideo];
 }
 
-- (instancetype)initWithDanmakuModel:(HJDanmakuMode)danmakuModel {
+- (instancetype)initWithDanmakuMode:(HJDanmakuMode)danmakuMode {
     if (self = [super init]) {
-        self.danmakuModel = danmakuModel;
+        self.danmakuMode = danmakuMode;
+        self.tolerance = 2.0f;
     }
     return self;
 }

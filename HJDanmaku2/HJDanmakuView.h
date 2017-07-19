@@ -17,12 +17,12 @@
 @optional
 
 // preparate completed. you can start render after callback
-- (void)perpareCompletedWithDanmakuView:(HJDanmakuView *)danmakuView;
+- (void)prepareCompletedWithDanmakuView:(HJDanmakuView *)danmakuView;
 
 // called before render. return NO will ignore danmaku
 - (BOOL)danmakuView:(HJDanmakuView *)danmakuView shouldRenderDanmaku:(HJDanmakuModel *)danmaku;
 
-// Display customization
+// display customization
 - (void)danmakuView:(HJDanmakuView *)danmakuView willDisplayCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku;
 - (void)danmakuView:(HJDanmakuView *)danmakuView didEndDisplayCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku;
 
@@ -43,16 +43,20 @@
 - (instancetype)initWithFrame:(CGRect)frame configuration:(HJDanmakuConfiguration *)configuration;
 
 - (void)registerClass:(Class)cellClass forCellReuseIdentifier:(NSString *)identifier;
-- (HJDanmakuCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier;
+- (__kindof HJDanmakuCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier;
 
 // you can prepare with nil when liveModel
 - (void)prepareDanmakus:(NSArray<HJDanmakuModel *> *)danmakus;
-- (void)start;
+
+// be sure to call -prepareDanmakus before -play, when isPrepared is NO, call will be invalid
+- (void)play;
 - (void)pause;
-- (void)resume;
 - (void)stop;
 
-- (void)sendDanmaku:(HJDanmakuModel *)danmaku;
+/* send customization. when force, renderer will draw the danmaku immediately and ignore the maximum quantity limit.
+   you should call -sendDanmakus: instead of -sendDanmaku:forceRender: to send the danmakus from a remote servers
+ */
+- (void)sendDanmaku:(HJDanmakuModel *)danmaku forceRender:(BOOL)force;
 - (void)sendDanmakus:(NSArray<HJDanmakuModel *> *)danmakus;
 
 @end
@@ -62,6 +66,9 @@
 @protocol HJDanmakuViewDateSource <NSObject>
 
 @required
+
+// variable cell width support
+- (CGFloat)danmakuView:(HJDanmakuView *)danmakuView widthForDanmaku:(HJDanmakuModel *)danmaku;
 
 // cell display. implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
 - (HJDanmakuCell *)danmakuView:(HJDanmakuView *)danmakuView cellForDanmaku:(HJDanmakuModel *)danmaku;

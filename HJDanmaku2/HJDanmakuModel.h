@@ -15,7 +15,7 @@
 @property (readonly) HJDanmakuType danmakuType;
 
 // unit second, ignore when liveModel
-@property (nonatomic, assign) float time;
+@property (nonatomic) CGFloat time;
 
 - (instancetype)initWithType:(HJDanmakuType)danmakuType NS_DESIGNATED_INITIALIZER;
 

@@ -10,7 +10,7 @@
 
 @interface HJDanmakuCell : UIView
 
-@property (nonatomic, assign) NSUInteger zIndex; // Default LR 0  FT/FB 10
+@property (nonatomic) NSUInteger zIndex; // Default LR 0  FT/FB 10
 
 @property (nonatomic, readonly) UILabel *textLabel;
 
