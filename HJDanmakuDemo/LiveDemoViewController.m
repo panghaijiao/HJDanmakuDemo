@@ -35,6 +35,8 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.edgesForExtendedLayout = UIRectEdgeNone;
     HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeLive];
+    config.duration = 5.0f;
+    config.cellHeight = 40.0f;
     self.danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
     self.danmakuView.dataSource = self;
     self.danmakuView.delegate = self;
@@ -54,6 +56,8 @@
 - (void)randomSendNewDanmaku {
     DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
     danmaku.text = @"^^^";
+    danmaku.textFont = [UIFont systemFontOfSize:20];
+    danmaku.textColor = [UIColor redColor];
     [self.danmakuView sendDanmaku:danmaku forceRender:YES];
 }
 
@@ -73,24 +77,25 @@
 
 - (void)prepareCompletedWithDanmakuView:(HJDanmakuView *)danmakuView {
     [self.danmakuView play];
-//    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(randomSendNewDanmaku) userInfo:nil repeats:YES];
-    [self randomSendNewDanmaku];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(randomSendNewDanmaku) userInfo:nil repeats:YES];
+//    [self randomSendNewDanmaku];
 }
 
 #pragma mark - dataSource
 
+- (CGFloat)danmakuView:(HJDanmakuView *)danmakuView widthForDanmaku:(HJDanmakuModel *)danmaku {
+    DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
+    return [model.text sizeWithAttributes:@{NSFontAttributeName: model.textFont}].width + 1.0f;
+}
+
 - (HJDanmakuCell *)danmakuView:(HJDanmakuView *)danmakuView cellForDanmaku:(HJDanmakuModel *)danmaku {
     DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
     DemoDanmakuCell *cell = [danmakuView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.backgroundColor = [UIColor lightGrayColor];
     cell.textLabel.font = model.textFont;
     cell.textLabel.textColor = model.textColor;
     cell.textLabel.text = model.text;
     return cell;
-}
-
-- (CGFloat)danmakuView:(HJDanmakuView *)danmakuView widthForDanmaku:(HJDanmakuModel *)danmaku {
-    DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
-    return [model.text sizeWithAttributes:@{NSFontAttributeName:model.textFont}].width;
 }
 
 @end

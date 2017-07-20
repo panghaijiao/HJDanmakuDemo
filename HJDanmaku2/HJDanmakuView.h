@@ -45,6 +45,9 @@
 - (void)registerClass:(Class)cellClass forCellReuseIdentifier:(NSString *)identifier;
 - (__kindof HJDanmakuCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier;
 
+- (__kindof HJDanmakuModel *)danmakuForVisibleCell:(HJDanmakuCell *)danmakuCell; // returns nil if cell is not visible
+@property (nonatomic, readonly) NSArray<__kindof HJDanmakuCell *> *visibleCells;
+
 // you can prepare with nil when liveModel
 - (void)prepareDanmakus:(NSArray<HJDanmakuModel *> *)danmakus;
 

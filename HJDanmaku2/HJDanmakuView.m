@@ -9,7 +9,7 @@
 #import "HJDanmakuView.h"
 #import <libkern/OSAtomic.h>
 
-static const CGFloat HJFrameInterval = 0.5;
+static const CGFloat HJFrameInterval = 0.2;
 
 static inline void onMainThreadAsync(void (^block)()) {
     if ([NSThread isMainThread]) block();
@@ -181,13 +181,17 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 @interface HJDanmakuView () {
     OSSpinLock _reuseLock;
-    dispatch_queue_t _queue;
+    dispatch_queue_t _renderQueue;
 }
-
-@property (nonatomic, strong) CADisplayLink *displayLink;
 
 @property (nonatomic, strong) HJDanmakuConfiguration *configuration;
 @property (nonatomic, assign) NSUInteger toleranceCount;
+
+@property (nonatomic, strong) HJDanmakuSource *danmakuSource;
+@property (nonatomic, strong) NSOperationQueue *sourceQueue;
+
+@property (nonatomic, strong) CADisplayLink *displayLink;
+@property (nonatomic, assign) HJDanmakuTime playTime;
 
 @property (nonatomic, assign) BOOL isPrepared;
 @property (nonatomic, assign) BOOL isPlaying;
@@ -195,17 +199,16 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 @property (nonatomic, strong) NSMutableDictionary *cellClassInfo;
 @property (nonatomic, strong) NSMutableDictionary *cellReusePool;
 
-@property (nonatomic, strong) NSMutableArray *danmakuQueuePool;
-@property (nonatomic, strong) NSMutableArray *renderingDanmakus;
-
-@property (nonatomic, strong) HJDanmakuSource *danmakuSource;
+@property (nonatomic, strong) NSMutableArray <HJDanmakuAgent *> *danmakuQueuePool;
+@property (nonatomic, strong) NSMutableArray <HJDanmakuAgent *> *renderingDanmakus;
 
 @end
 
 @implementation HJDanmakuView
 
 - (void)dealloc {
-    HJDispatchQueueRelease(_queue);
+    NSLog(@">>> dealloc");
+    HJDispatchQueueRelease(_renderQueue);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame configuration:(HJDanmakuConfiguration *)configuration {
@@ -219,10 +222,14 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         self.renderingDanmakus = [NSMutableArray array];
         self.danmakuSource = [HJDanmakuSource danmakuSourceWithMode:configuration.danmakuMode];
         
+        self.sourceQueue = [NSOperationQueue new];
+        self.sourceQueue.name = @"com.olinone.danmaku.sourceQueue";
+        self.sourceQueue.maxConcurrentOperationCount = 1;
+        
         _reuseLock = OS_SPINLOCK_INIT;
-        _queue = dispatch_queue_create("com.olinone.danmaku.queue", DISPATCH_QUEUE_SERIAL);
-        dispatch_queue_t dQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-        dispatch_set_target_queue(_queue, dQueue);
+        _renderQueue = dispatch_queue_create("com.olinone.danmaku.renderQueue", DISPATCH_QUEUE_SERIAL);
+        dispatch_set_target_queue(_renderQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
+        NSLog(@">>> init");
     }
     return self;
 }
@@ -249,10 +256,12 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     HJDanmakuCell *cell = cells.lastObject;
     [cells removeLastObject];
     OSSpinLockUnlock(&_reuseLock);
+    cell.zIndex = 0;
+    [cell prepareForReuse];
     return cell;
 }
 
-- (void)storeCellToReusePool:(HJDanmakuCell *)danmakuCell {
+- (void)recycleCellToReusePool:(HJDanmakuCell *)danmakuCell {
     NSString *identifier = danmakuCell.reuseIdentifier;
     if (!identifier) {
         return;
@@ -270,12 +279,8 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 #pragma mark -
 
 - (void)prepareDanmakus:(NSArray<HJDanmakuModel *> *)danmakus {
-    [self stop];
     self.isPrepared = NO;
-    dispatch_sync(_queue, ^{
-        [self.danmakuQueuePool removeAllObjects];
-        [self.renderingDanmakus removeAllObjects];
-    });
+    [self stop];
     
     if (danmakus.count == 0) {
         self.isPrepared = YES;
@@ -330,33 +335,136 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     self.isPlaying = NO;
     [self.displayLink invalidate];
     self.displayLink = nil;
+    self.playTime = (HJDanmakuTime){0, HJFrameInterval};
+    [self recycleDanmakuAgents:[self.renderingDanmakus copy]];
+    dispatch_async(_renderQueue, ^{
+        [self.danmakuQueuePool removeAllObjects];
+        [self.renderingDanmakus removeAllObjects];
+    });
 }
 
 #pragma mark - 
 
 - (void)update {
-    HJDanmakuTime playTime = {0, 0};
+    HJDanmakuTime time = {0, HJFrameInterval};
     if ([self.dataSource respondsToSelector:@selector(playTimeWithDanmakuView:)]) {
-        playTime.time = [self.dataSource playTimeWithDanmakuView:self];
+        time.time = [self.dataSource playTimeWithDanmakuView:self];
     }
-    if (self.configuration.danmakuMode == HJDanmakuModeVideo && playTime.time <= 0) {
+    if (self.configuration.danmakuMode == HJDanmakuModeVideo && time.time <= 0) {
         return;
     }
-    
+    [self loadDanmakusFromSourceForTime:time];
+    [self renderDanmakusForTime:time];
+}
+
+- (void)loadDanmakusFromSourceForTime:(HJDanmakuTime)time {
     BOOL isBuffering = NO;
     if ([self.dataSource respondsToSelector:@selector(bufferingWithDanmakuView:)]) {
         isBuffering = [self.dataSource bufferingWithDanmakuView:self];
     }
-    
-    dispatch_async(_queue, ^{
-        NSArray <HJDanmakuAgent *> *danmakuAgents = nil;
-        if (!isBuffering) {
-            danmakuAgents = [self.danmakuSource fetchDanmakuAgentsForTime:playTime];
-        }
+    if (isBuffering) {
+        return;
+    }
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        NSArray <HJDanmakuAgent *> *danmakuAgents = [self.danmakuSource fetchDanmakuAgentsForTime:time];
         if (danmakuAgents.count > 0) {
-            
+            [danmakuAgents enumerateObjectsUsingBlock:^(HJDanmakuAgent *danmakuAgent, NSUInteger idx, BOOL *stop) {
+                danmakuAgent.remainingTime = self.configuration.duration;
+                danmakuAgent.toleranceCount = self.toleranceCount;
+            }];
+            dispatch_async(_renderQueue, ^{
+                if (time.time < self.playTime.time || time.time > NSMaxTime(self.playTime)) {
+                    [self.danmakuQueuePool removeAllObjects];
+                }
+                [self.danmakuQueuePool insertObjects:danmakuAgents atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, danmakuAgents.count)]];
+                self.playTime = time;
+            });
+        }
+    }];
+    [self.sourceQueue cancelAllOperations];
+    [self.sourceQueue addOperation:operation];
+}
+
+- (void)renderDanmakusForTime:(HJDanmakuTime)time {
+    dispatch_async(_renderQueue, ^{
+        [self renderDisplayingDanmakusForTime:time];
+        [self renderNewDanmakusForTime:time];
+        [self removeExpiredDanmakusForTime:time];
+    });
+}
+
+- (void)renderDisplayingDanmakusForTime:(HJDanmakuTime)time {
+    NSMutableArray *disAppearDanmakuAgens = [NSMutableArray arrayWithCapacity:self.renderingDanmakus.count];
+    [self.renderingDanmakus enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(HJDanmakuAgent *danmakuAgent, NSUInteger idx, BOOL *stop) {
+        danmakuAgent.remainingTime -= time.interval;
+        if (danmakuAgent.remainingTime <= 0) {
+            [disAppearDanmakuAgens addObject:danmakuAgent];
+            [self.renderingDanmakus removeObjectAtIndex:idx];
+        }
+    }];
+    [self recycleDanmakuAgents:disAppearDanmakuAgens];
+}
+
+- (void)recycleDanmakuAgents:(NSArray *)danmakuAgents {
+    onMainThreadAsync(^{
+        for (HJDanmakuAgent *danmakuAgent in danmakuAgents) {
+            [danmakuAgent.danmakuCell.layer removeAllAnimations];
+            [danmakuAgent.danmakuCell removeFromSuperview];
+            [self recycleCellToReusePool:danmakuAgent.danmakuCell];
+            if ([self.delegate respondsToSelector:@selector(danmakuView:didEndDisplayCell:danmaku:)]) {
+                [self.delegate danmakuView:self didEndDisplayCell:danmakuAgent.danmakuCell danmaku:danmakuAgent.danmakuModel];
+            }
         }
     });
+}
+
+- (void)renderNewDanmakusForTime:(HJDanmakuTime)time {
+    for (HJDanmakuAgent *danmakuAgent in self.danmakuQueuePool) {
+        BOOL shouldRender = YES;
+        if ([self.delegate respondsToSelector:@selector(danmakuView:shouldRenderDanmaku:)]) {
+            shouldRender = [self.delegate danmakuView:self shouldRenderDanmaku:danmakuAgent.danmakuModel];
+        }
+        if (!shouldRender) {
+            danmakuAgent.toleranceCount = 0;
+            continue;
+        }
+        
+        [self renderNewDanmaku:danmakuAgent forTime:time];
+        danmakuAgent.toleranceCount = 0;
+    }
+}
+
+- (void)renderNewDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
+    [self.renderingDanmakus addObject:danmakuAgent];
+    danmakuAgent.px = CGRectGetWidth(self.bounds);
+    danmakuAgent.py = 0;
+    CGFloat width = [self.dataSource danmakuView:self widthForDanmaku:danmakuAgent.danmakuModel];
+    danmakuAgent.size = CGSizeMake(width, self.configuration.cellHeight);
+    NSUInteger zIndex = danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR ? 0: 10;
+    onMainThreadAsync(^{
+        danmakuAgent.danmakuCell = ({
+            HJDanmakuCell *cell = [self.dataSource danmakuView:self cellForDanmaku:danmakuAgent.danmakuModel];
+            cell.frame = (CGRect){CGPointMake(danmakuAgent.px, danmakuAgent.py), danmakuAgent.size};
+            cell.zIndex = cell.zIndex > 0 ? cell.zIndex: zIndex;
+            cell;
+        });
+        if ([self.delegate respondsToSelector:@selector(danmakuView:willDisplayCell:danmaku:)]) {
+            [self.delegate danmakuView:self willDisplayCell:danmakuAgent.danmakuCell danmaku:danmakuAgent.danmakuModel];
+        }
+        [self insertSubview:danmakuAgent.danmakuCell atIndex:danmakuAgent.danmakuCell.zIndex];
+        [UIView animateWithDuration:danmakuAgent.remainingTime delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            danmakuAgent.danmakuCell.frame = (CGRect){CGPointMake(-danmakuAgent.size.width, danmakuAgent.py), danmakuAgent.size};
+        } completion:nil];
+    });
+}
+
+- (void)removeExpiredDanmakusForTime:(HJDanmakuTime)time {
+    [self.danmakuQueuePool enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(HJDanmakuAgent *danmakuAgent, NSUInteger idx, BOOL *stop) {
+        danmakuAgent.toleranceCount --;
+        if (danmakuAgent.toleranceCount <= 0) {
+            [self.danmakuQueuePool removeObjectAtIndex:idx];
+        }
+    }];
 }
 
 #pragma mark -
@@ -373,6 +481,23 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         return;
     }
     [self.danmakuSource sendDanmakus:danmakus];
+}
+
+- (HJDanmakuModel *)danmakuForVisibleCell:(HJDanmakuCell *)danmakuCell {
+    if (!danmakuCell) {
+        return nil;
+    }
+    NSArray *renderingDanmakus = [NSArray arrayWithArray:self.renderingDanmakus];
+    for (HJDanmakuAgent *danmakuAgent in renderingDanmakus) {
+        if (danmakuAgent.danmakuCell == danmakuCell) {
+            return danmakuAgent.danmakuModel;
+        }
+    }
+    return nil;
+}
+
+- (NSArray *)visibleCells {
+    return [self.renderingDanmakus valueForKey:@"danmakuCell"];
 }
 
 @end
