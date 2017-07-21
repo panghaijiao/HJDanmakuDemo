@@ -37,8 +37,8 @@
 @property (nonatomic, weak) id <HJDanmakuViewDelegate> delegate;
 
 @property (nonatomic, readonly) HJDanmakuConfiguration *configuration;
-@property (nonatomic, readonly) BOOL isPrepared;
-@property (nonatomic, readonly) BOOL isPlaying;
+@property (readonly) BOOL isPrepared;
+@property (readonly) BOOL isPlaying;
 
 - (instancetype)initWithFrame:(CGRect)frame configuration:(HJDanmakuConfiguration *)configuration;
 

@@ -17,8 +17,8 @@
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) CGFloat largeFontSize;
 
-@property (nonatomic) CGFloat maxLRShowCount;
-@property (nonatomic) CGFloat maxShowCount;
+@property (nonatomic) NSUInteger maxLRShowCount;
+@property (nonatomic) NSUInteger maxShowCount;
 
 //发送弹幕是否显示下划线
 @property (nonatomic) BOOL    isShowLineWhenSelf;
