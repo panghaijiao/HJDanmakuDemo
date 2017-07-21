@@ -17,7 +17,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
     MenuTableViewController *vc = [MenuTableViewController new];
     UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:vc];
     

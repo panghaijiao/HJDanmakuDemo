@@ -13,6 +13,8 @@
 
 @interface LiveDemoViewController () <HJDanmakuViewDateSource, HJDanmakuViewDelegate>
 
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+
 @property (nonatomic, strong) HJDanmakuView *danmakuView;
 @property (nonatomic, strong) NSTimer *timer;
 
@@ -42,8 +44,7 @@
     self.danmakuView.delegate = self;
     [self.danmakuView registerClass:[DemoDanmakuCell class] forCellReuseIdentifier:@"cell"];
     self.danmakuView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:self.danmakuView];
-    [self.view sendSubviewToBack:self.danmakuView];
+    [self.view insertSubview:self.danmakuView aboveSubview:self.imageView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -53,32 +54,41 @@
     }
 }
 
+#pragma mark - 
+
+- (IBAction)onPlayBtnClick:(UIButton *)sender {
+    if (self.danmakuView.isPrepared) {
+        if (!self.timer) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(randomSendNewDanmaku) userInfo:nil repeats:YES];
+        }
+        [self.danmakuView play];
+    }
+}
+
 - (void)randomSendNewDanmaku {
     DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
     danmaku.text = @"^^^";
     danmaku.textFont = [UIFont systemFontOfSize:20];
     danmaku.textColor = [UIColor redColor];
-    [self.danmakuView sendDanmaku:danmaku forceRender:YES];
+    [self.danmakuView sendDanmaku:danmaku forceRender:NO];
 }
 
-#pragma mark - 
+- (IBAction)onPauseBtnClick:(id)sender {
+    [self.danmakuView pause];
+}
 
-- (IBAction)onPlayBtnClick:(UIButton *)sender {
-    if (self.danmakuView.isPlaying) {
-        [self.danmakuView pause];
-    } else {
-        [self.danmakuView play];
-    }
-    NSString *title = self.danmakuView.isPlaying ? @"pause": @"play";
-    [sender setTitle:title forState:UIControlStateNormal];
+- (IBAction)onSendClick:(id)sender {
+    DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
+    danmaku.text = @"😊😊olinone.com😊😊";
+    danmaku.textFont = [UIFont systemFontOfSize:20];
+    danmaku.textColor = [UIColor blueColor];
+    [self.danmakuView sendDanmaku:danmaku forceRender:YES];
 }
 
 #pragma mark - delegate
 
 - (void)prepareCompletedWithDanmakuView:(HJDanmakuView *)danmakuView {
     [self.danmakuView play];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(randomSendNewDanmaku) userInfo:nil repeats:YES];
-//    [self randomSendNewDanmaku];
 }
 
 #pragma mark - dataSource
