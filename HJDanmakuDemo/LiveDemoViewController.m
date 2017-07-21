@@ -91,7 +91,7 @@
 - (HJDanmakuCell *)danmakuView:(HJDanmakuView *)danmakuView cellForDanmaku:(HJDanmakuModel *)danmaku {
     DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
     DemoDanmakuCell *cell = [danmakuView dequeueReusableCellWithIdentifier:@"cell"];
-    cell.backgroundColor = [UIColor lightGrayColor];
+//    cell.backgroundColor = [UIColor lightGrayColor];
     cell.textLabel.font = model.textFont;
     cell.textLabel.textColor = model.textColor;
     cell.textLabel.text = model.text;

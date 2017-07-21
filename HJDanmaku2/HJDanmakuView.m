@@ -373,7 +373,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
                 danmakuAgent.toleranceCount = self.toleranceCount;
             }];
             dispatch_async(_renderQueue, ^{
-                if (time.time < self.playTime.time || time.time > NSMaxTime(self.playTime)) {
+                if (time.time < self.playTime.time || time.time > self.playTime.time + self.configuration.tolerance) {
                     [self.danmakuQueuePool removeAllObjects];
                 }
                 [self.danmakuQueuePool insertObjects:danmakuAgents atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, danmakuAgents.count)]];

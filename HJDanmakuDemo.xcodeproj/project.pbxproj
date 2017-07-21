@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		A0008CA81AB19AFC009550D7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A0008CA71AB19AFC009550D7 /* main.m */; };
 		A0008CAB1AB19AFC009550D7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A0008CAA1AB19AFC009550D7 /* AppDelegate.m */; };
-		A0008CAE1AB19AFC009550D7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0008CAD1AB19AFC009550D7 /* ViewController.m */; };
-		A0008CB11AB19AFC009550D7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0008CAF1AB19AFC009550D7 /* Main.storyboard */; };
 		A0008CB31AB19AFC009550D7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0008CB21AB19AFC009550D7 /* Images.xcassets */; };
 		A0008CB61AB19AFC009550D7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0008CB41AB19AFC009550D7 /* LaunchScreen.xib */; };
 		A0008CDD1AB19E38009550D7 /* danmakufile in Resources */ = {isa = PBXBuildFile; fileRef = A0008CDC1AB19E38009550D7 /* danmakufile */; };
@@ -31,6 +29,8 @@
 		A0B826331C1887F6004F6953 /* DanmakuRetainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B826291C1887F6004F6953 /* DanmakuRetainer.m */; };
 		A0B826341C1887F6004F6953 /* DanmakuFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8262C1C1887F6004F6953 /* DanmakuFactory.m */; };
 		A0B826351C1887F6004F6953 /* DanmakuFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B8262E1C1887F6004F6953 /* DanmakuFilter.m */; };
+		A0F0D8601F21A92B0091031A /* FirstVersionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0F0D85E1F21A92B0091031A /* FirstVersionViewController.m */; };
+		A0F0D8611F21A92B0091031A /* FirstVersionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0F0D85F1F21A92B0091031A /* FirstVersionViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,9 +39,6 @@
 		A0008CA71AB19AFC009550D7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A0008CA91AB19AFC009550D7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A0008CAA1AB19AFC009550D7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		A0008CAC1AB19AFC009550D7 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		A0008CAD1AB19AFC009550D7 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		A0008CB01AB19AFC009550D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A0008CB21AB19AFC009550D7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A0008CB51AB19AFC009550D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		A0008CDC1AB19E38009550D7 /* danmakufile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = danmakufile; sourceTree = SOURCE_ROOT; };
@@ -81,6 +78,9 @@
 		A0B8262C1C1887F6004F6953 /* DanmakuFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DanmakuFactory.m; sourceTree = "<group>"; };
 		A0B8262D1C1887F6004F6953 /* DanmakuFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DanmakuFilter.h; sourceTree = "<group>"; };
 		A0B8262E1C1887F6004F6953 /* DanmakuFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DanmakuFilter.m; sourceTree = "<group>"; };
+		A0F0D85D1F21A92B0091031A /* FirstVersionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstVersionViewController.h; sourceTree = "<group>"; };
+		A0F0D85E1F21A92B0091031A /* FirstVersionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstVersionViewController.m; sourceTree = "<group>"; };
+		A0F0D85F1F21A92B0091031A /* FirstVersionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirstVersionViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,10 +114,11 @@
 		A0008CA41AB19AFC009550D7 /* HJDanmakuDemo */ = {
 			isa = PBXGroup;
 			children = (
-				A0008CAC1AB19AFC009550D7 /* ViewController.h */,
-				A0008CAD1AB19AFC009550D7 /* ViewController.m */,
 				A021F7D31F18C29300448501 /* MenuTableViewController.h */,
 				A021F7D41F18C29300448501 /* MenuTableViewController.m */,
+				A0F0D85D1F21A92B0091031A /* FirstVersionViewController.h */,
+				A0F0D85E1F21A92B0091031A /* FirstVersionViewController.m */,
+				A0F0D85F1F21A92B0091031A /* FirstVersionViewController.xib */,
 				A021F7CD1F18C0C300448501 /* VideoDemoViewController.h */,
 				A021F7CE1F18C0C300448501 /* VideoDemoViewController.m */,
 				A021F7D61F18C48200448501 /* LiveDemoViewController.h */,
@@ -140,7 +141,6 @@
 				A0008CA91AB19AFC009550D7 /* AppDelegate.h */,
 				A0008CAA1AB19AFC009550D7 /* AppDelegate.m */,
 				A0008CDC1AB19E38009550D7 /* danmakufile */,
-				A0008CAF1AB19AFC009550D7 /* Main.storyboard */,
 				A0008CB21AB19AFC009550D7 /* Images.xcassets */,
 				A0008CB41AB19AFC009550D7 /* LaunchScreen.xib */,
 				A0008CA61AB19AFC009550D7 /* Info.plist */,
@@ -277,9 +277,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0008CDD1AB19E38009550D7 /* danmakufile in Resources */,
-				A0008CB11AB19AFC009550D7 /* Main.storyboard in Resources */,
 				A0008CB61AB19AFC009550D7 /* LaunchScreen.xib in Resources */,
 				A0008CB31AB19AFC009550D7 /* Images.xcassets in Resources */,
+				A0F0D8611F21A92B0091031A /* FirstVersionViewController.xib in Resources */,
 				A036E6C31F1F7FEE00010FFD /* LiveDemoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -302,7 +302,7 @@
 				A035329F1F0E1C7D006C1B61 /* HJDanmakuModel.m in Sources */,
 				A08143741F18C9C40088BD95 /* DemoDanmakuCell.m in Sources */,
 				A0B826351C1887F6004F6953 /* DanmakuFilter.m in Sources */,
-				A0008CAE1AB19AFC009550D7 /* ViewController.m in Sources */,
+				A0F0D8601F21A92B0091031A /* FirstVersionViewController.m in Sources */,
 				A0008CAB1AB19AFC009550D7 /* AppDelegate.m in Sources */,
 				A03532991F0E19EB006C1B61 /* HJDanmakuView.m in Sources */,
 				A0008CA81AB19AFC009550D7 /* main.m in Sources */,
@@ -316,14 +316,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		A0008CAF1AB19AFC009550D7 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A0008CB01AB19AFC009550D7 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		A0008CB41AB19AFC009550D7 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

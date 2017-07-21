@@ -7,6 +7,7 @@
 //
 
 #import "MenuTableViewController.h"
+#import "FirstVersionViewController.h"
 #import "VideoDemoViewController.h"
 #import "LiveDemoViewController.h"
 
@@ -19,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"olinone";
-    self.tableView.rowHeight = 80.0f;
+    self.tableView.rowHeight = 64.0f;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
 }
 
@@ -27,23 +28,44 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     UIViewController *vc = nil;
-    switch (indexPath.row) {
+    switch (indexPath.section) {
         case 0:
-            vc = [VideoDemoViewController new];
+        {
+            vc = [FirstVersionViewController new];
+        }
             break;
         case 1:
-            vc = [LiveDemoViewController new];
+        {
+            switch (indexPath.row) {
+                case 0:
+                    vc = [VideoDemoViewController new];
+                    break;
+                case 1:
+                    vc = [LiveDemoViewController new];
+                    break;
+            }
+        }
+        default:
             break;
     }
-
     [self.navigationController pushViewController:vc animated:YES];
     
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     vc.title = cell.textLabel.text;
 }
 
+#pragma mark -
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return section == 0 ? @"1.0": @"2.0";
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 6;
+    return section == 0 ? 1: 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -51,12 +73,24 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
-    switch (indexPath.row) {
+    switch (indexPath.section) {
         case 0:
-            cell.textLabel.text = @"VideoModel";
+        {
+            cell.textLabel.text = @"Version 1.0";
+        }
             break;
         case 1:
-            cell.textLabel.text = @"LiveModel";
+        {
+            switch (indexPath.row) {
+                case 0:
+                    cell.textLabel.text = @"VideoMode";
+                    break;
+                case 1:
+                    cell.textLabel.text = @"LiveMode";
+                    break;
+            }
+        }
+        default:
             break;
     }
     return cell;
