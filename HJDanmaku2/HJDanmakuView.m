@@ -586,6 +586,12 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             return self.configuration.cellHeight * index;
         }
     }
+    if (danmakuAgent.force) {
+        u_int8_t index = arc4random() % maxPyIndex;
+        danmakuAgent.yIdx = index;
+        retainer[@(index)] = danmakuAgent;
+        return self.configuration.cellHeight * index;
+    }
     return -1;
 }
 
@@ -623,6 +629,12 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             return self.configuration.cellHeight * index;
         }
     }
+    if (danmakuAgent.force) {
+        u_int8_t index = arc4random() % maxPyIndex;
+        danmakuAgent.yIdx = index;
+        retainer[@(index)] = danmakuAgent;
+        return self.configuration.cellHeight * index;
+    }
     return -1;
 }
 
@@ -650,6 +662,12 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             retainer[key] = danmakuAgent;
             return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * index;
         }
+    }
+    if (danmakuAgent.force) {
+        u_int8_t index = arc4random() % maxPyIndex;
+        danmakuAgent.yIdx = index;
+        retainer[@(index)] = danmakuAgent;
+        return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * index;
     }
     return -1;
 }

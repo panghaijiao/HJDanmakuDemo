@@ -59,7 +59,7 @@
 - (IBAction)onPlayBtnClick:(UIButton *)sender {
     if (self.danmakuView.isPrepared) {
         if (!self.timer) {
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(randomSendNewDanmaku) userInfo:nil repeats:YES];
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(randomSendNewDanmaku) userInfo:nil repeats:YES];
         }
         [self.danmakuView play];
     }
@@ -79,6 +79,7 @@
 
 - (IBAction)onSendClick:(id)sender {
     DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
+    danmaku.selfFlag = YES;
     danmaku.text = @"😊😊olinone.com😊😊";
     danmaku.textFont = [UIFont systemFontOfSize:20];
     danmaku.textColor = [UIColor blueColor];
@@ -101,7 +102,9 @@
 - (HJDanmakuCell *)danmakuView:(HJDanmakuView *)danmakuView cellForDanmaku:(HJDanmakuModel *)danmaku {
     DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
     DemoDanmakuCell *cell = [danmakuView dequeueReusableCellWithIdentifier:@"cell"];
-//    cell.backgroundColor = [UIColor lightGrayColor];
+    if (model.selfFlag) {
+        cell.zIndex = 30;
+    }
     cell.textLabel.font = model.textFont;
     cell.textLabel.textColor = model.textColor;
     cell.textLabel.text = model.text;

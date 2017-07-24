@@ -26,7 +26,7 @@
 // height of single line cell, avoid modify after initialization
 @property (nonatomic) CGFloat cellHeight;
 
-// the maximum number of danmakus at the same time
+// the maximum number of danmakus at the same time, default 0, adapt to the height of screen
 @property (nonatomic) NSUInteger maxShowCount;
 
 - (instancetype)initWithDanmakuMode:(HJDanmakuMode)danmakuMode NS_DESIGNATED_INITIALIZER;
