@@ -16,7 +16,7 @@ A high performance danmaku engine for iOS. For more details please click [here](
 ## Podfile
 
 ```
-pod 'HJDanmaku', :git => 'https://github.com/panghaijiao/HJDanmakuDemo'
+pod 'HJDanmaku', :git => 'https://github.com/panghaijiao/HJDanmakuDemo.git'
 ```
 
 
