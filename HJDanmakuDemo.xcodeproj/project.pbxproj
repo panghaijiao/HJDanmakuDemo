@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		019E93692A4FE2771C4B4616 /* libPods-HJDanmakuDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5156C33FAEF90500BEB763 /* libPods-HJDanmakuDemo.a */; };
 		A0008CA81AB19AFC009550D7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A0008CA71AB19AFC009550D7 /* main.m */; };
 		A0008CAB1AB19AFC009550D7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A0008CAA1AB19AFC009550D7 /* AppDelegate.m */; };
 		A0008CB31AB19AFC009550D7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0008CB21AB19AFC009550D7 /* Images.xcassets */; };
@@ -15,10 +16,6 @@
 		A021F7CF1F18C0C300448501 /* VideoDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A021F7CE1F18C0C300448501 /* VideoDemoViewController.m */; };
 		A021F7D51F18C29300448501 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A021F7D41F18C29300448501 /* MenuTableViewController.m */; };
 		A021F7D81F18C48200448501 /* LiveDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A021F7D71F18C48200448501 /* LiveDemoViewController.m */; };
-		A03532991F0E19EB006C1B61 /* HJDanmakuView.m in Sources */ = {isa = PBXBuildFile; fileRef = A03532981F0E19EB006C1B61 /* HJDanmakuView.m */; };
-		A035329F1F0E1C7D006C1B61 /* HJDanmakuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A035329E1F0E1C7D006C1B61 /* HJDanmakuModel.m */; };
-		A03532AB1F0E232E006C1B61 /* HJDanmakuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A03532AA1F0E232E006C1B61 /* HJDanmakuCell.m */; };
-		A03532AE1F0E2422006C1B61 /* HJDanmakuConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = A03532AD1F0E2422006C1B61 /* HJDanmakuConfiguration.m */; };
 		A036E6C31F1F7FEE00010FFD /* LiveDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A036E6C21F1F7FED00010FFD /* LiveDemoViewController.xib */; };
 		A08143711F18C6400088BD95 /* DemoDanmakuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A08143701F18C6400088BD95 /* DemoDanmakuModel.m */; };
 		A08143741F18C9C40088BD95 /* DemoDanmakuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A08143731F18C9C40088BD95 /* DemoDanmakuCell.m */; };
@@ -34,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		98B0E2E9F0CB5A3A37788DB8 /* Pods-HJDanmakuDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJDanmakuDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-HJDanmakuDemo/Pods-HJDanmakuDemo.release.xcconfig"; sourceTree = "<group>"; };
 		A0008CA21AB19AFC009550D7 /* HJDanmakuDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HJDanmakuDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0008CA61AB19AFC009550D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A0008CA71AB19AFC009550D7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -48,17 +46,7 @@
 		A021F7D41F18C29300448501 /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
 		A021F7D61F18C48200448501 /* LiveDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveDemoViewController.h; sourceTree = "<group>"; };
 		A021F7D71F18C48200448501 /* LiveDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveDemoViewController.m; sourceTree = "<group>"; };
-		A03532971F0E19EB006C1B61 /* HJDanmakuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJDanmakuView.h; sourceTree = "<group>"; };
-		A03532981F0E19EB006C1B61 /* HJDanmakuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJDanmakuView.m; sourceTree = "<group>"; };
-		A035329D1F0E1C7D006C1B61 /* HJDanmakuModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJDanmakuModel.h; sourceTree = "<group>"; };
-		A035329E1F0E1C7D006C1B61 /* HJDanmakuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJDanmakuModel.m; sourceTree = "<group>"; };
-		A03532A01F0E1D51006C1B61 /* HJDanmakuDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJDanmakuDefines.h; sourceTree = "<group>"; };
 		A03532A61F0E1EC4006C1B61 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		A03532A81F0E2258006C1B61 /* HJDanmaku.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HJDanmaku.h; sourceTree = "<group>"; };
-		A03532A91F0E232E006C1B61 /* HJDanmakuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJDanmakuCell.h; sourceTree = "<group>"; };
-		A03532AA1F0E232E006C1B61 /* HJDanmakuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJDanmakuCell.m; sourceTree = "<group>"; };
-		A03532AC1F0E2422006C1B61 /* HJDanmakuConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJDanmakuConfiguration.h; sourceTree = "<group>"; };
-		A03532AD1F0E2422006C1B61 /* HJDanmakuConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJDanmakuConfiguration.m; sourceTree = "<group>"; };
 		A036E6C21F1F7FED00010FFD /* LiveDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LiveDemoViewController.xib; sourceTree = "<group>"; };
 		A081436F1F18C6400088BD95 /* DemoDanmakuModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoDanmakuModel.h; sourceTree = "<group>"; };
 		A08143701F18C6400088BD95 /* DemoDanmakuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoDanmakuModel.m; sourceTree = "<group>"; };
@@ -81,6 +69,8 @@
 		A0F0D85D1F21A92B0091031A /* FirstVersionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstVersionViewController.h; sourceTree = "<group>"; };
 		A0F0D85E1F21A92B0091031A /* FirstVersionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstVersionViewController.m; sourceTree = "<group>"; };
 		A0F0D85F1F21A92B0091031A /* FirstVersionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirstVersionViewController.xib; sourceTree = "<group>"; };
+		A3076196508C4ABC78FC3BAA /* Pods-HJDanmakuDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HJDanmakuDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HJDanmakuDemo/Pods-HJDanmakuDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		CB5156C33FAEF90500BEB763 /* libPods-HJDanmakuDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HJDanmakuDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019E93692A4FE2771C4B4616 /* libPods-HJDanmakuDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,10 +90,10 @@
 			children = (
 				A0008CA41AB19AFC009550D7 /* HJDanmakuDemo */,
 				A0D1A69B1F260B7100B39F2E /* HJDanmaku1 */,
-				A03532961F0E19EB006C1B61 /* HJDanmaku2 */,
 				A0008CA51AB19AFC009550D7 /* Supporting Files */,
 				A0008CA31AB19AFC009550D7 /* Products */,
 				A03532A51F0E1EC3006C1B61 /* Frameworks */,
+				A128DC2A63FC62DBEBB05E2E /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -150,27 +141,11 @@
 			path = HJDanmakuDemo;
 			sourceTree = "<group>";
 		};
-		A03532961F0E19EB006C1B61 /* HJDanmaku2 */ = {
-			isa = PBXGroup;
-			children = (
-				A03532A81F0E2258006C1B61 /* HJDanmaku.h */,
-				A03532A01F0E1D51006C1B61 /* HJDanmakuDefines.h */,
-				A03532971F0E19EB006C1B61 /* HJDanmakuView.h */,
-				A03532981F0E19EB006C1B61 /* HJDanmakuView.m */,
-				A03532A91F0E232E006C1B61 /* HJDanmakuCell.h */,
-				A03532AA1F0E232E006C1B61 /* HJDanmakuCell.m */,
-				A035329D1F0E1C7D006C1B61 /* HJDanmakuModel.h */,
-				A035329E1F0E1C7D006C1B61 /* HJDanmakuModel.m */,
-				A03532AC1F0E2422006C1B61 /* HJDanmakuConfiguration.h */,
-				A03532AD1F0E2422006C1B61 /* HJDanmakuConfiguration.m */,
-			);
-			path = HJDanmaku2;
-			sourceTree = SOURCE_ROOT;
-		};
 		A03532A51F0E1EC3006C1B61 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				A03532A61F0E1EC4006C1B61 /* UIKit.framework */,
+				CB5156C33FAEF90500BEB763 /* libPods-HJDanmakuDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -196,6 +171,15 @@
 			path = HJDanmaku1;
 			sourceTree = "<group>";
 		};
+		A128DC2A63FC62DBEBB05E2E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A3076196508C4ABC78FC3BAA /* Pods-HJDanmakuDemo.debug.xcconfig */,
+				98B0E2E9F0CB5A3A37788DB8 /* Pods-HJDanmakuDemo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -203,9 +187,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A0008CC51AB19AFC009550D7 /* Build configuration list for PBXNativeTarget "HJDanmakuDemo" */;
 			buildPhases = (
+				307AA71CC949A46776706955 /* [CP] Check Pods Manifest.lock */,
 				A0008C9E1AB19AFC009550D7 /* Sources */,
 				A0008C9F1AB19AFC009550D7 /* Frameworks */,
 				A0008CA01AB19AFC009550D7 /* Resources */,
+				D69B9087D717D76E2189B9B1 /* [CP] Embed Pods Frameworks */,
+				68C4D117CA349FF2221A595A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -263,24 +250,68 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		307AA71CC949A46776706955 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		68C4D117CA349FF2221A595A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HJDanmakuDemo/Pods-HJDanmakuDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D69B9087D717D76E2189B9B1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HJDanmakuDemo/Pods-HJDanmakuDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A0008C9E1AB19AFC009550D7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A0D1A6AF1F260B7100B39F2E /* DanmakuTime.m in Sources */,
-				A03532AB1F0E232E006C1B61 /* HJDanmakuCell.m in Sources */,
 				A08143711F18C6400088BD95 /* DemoDanmakuModel.m in Sources */,
 				A0D1A6AB1F260B7100B39F2E /* DanmakuFactory.m in Sources */,
-				A03532AE1F0E2422006C1B61 /* HJDanmakuConfiguration.m in Sources */,
 				A0D1A6AD1F260B7100B39F2E /* DanmakuRenderer.m in Sources */,
-				A035329F1F0E1C7D006C1B61 /* HJDanmakuModel.m in Sources */,
 				A0D1A6AC1F260B7100B39F2E /* DanmakuFilter.m in Sources */,
 				A0D1A6AE1F260B7100B39F2E /* DanmakuRetainer.m in Sources */,
 				A08143741F18C9C40088BD95 /* DemoDanmakuCell.m in Sources */,
 				A0F0D8601F21A92B0091031A /* FirstVersionViewController.m in Sources */,
 				A0008CAB1AB19AFC009550D7 /* AppDelegate.m in Sources */,
-				A03532991F0E19EB006C1B61 /* HJDanmakuView.m in Sources */,
 				A0008CA81AB19AFC009550D7 /* main.m in Sources */,
 				A021F7CF1F18C0C300448501 /* VideoDemoViewController.m in Sources */,
 				A0D1A6AA1F260B7100B39F2E /* DanmakuBaseModel.m in Sources */,
@@ -389,6 +420,7 @@
 		};
 		A0008CC61AB19AFC009550D7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3076196508C4ABC78FC3BAA /* Pods-HJDanmakuDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
@@ -406,6 +438,7 @@
 		};
 		A0008CC71AB19AFC009550D7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 98B0E2E9F0CB5A3A37788DB8 /* Pods-HJDanmakuDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
