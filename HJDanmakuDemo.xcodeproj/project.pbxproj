@@ -26,6 +26,7 @@
 		A0D1A6AE1F260B7100B39F2E /* DanmakuRetainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D1A6A51F260B7100B39F2E /* DanmakuRetainer.m */; };
 		A0D1A6AF1F260B7100B39F2E /* DanmakuTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D1A6A71F260B7100B39F2E /* DanmakuTime.m */; };
 		A0D1A6B01F260B7100B39F2E /* DanmakuView.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D1A6A91F260B7100B39F2E /* DanmakuView.m */; };
+		A0D1A6B71F26280000B39F2E /* VideoDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0D1A6B61F26280000B39F2E /* VideoDemoViewController.xib */; };
 		A0F0D8601F21A92B0091031A /* FirstVersionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0F0D85E1F21A92B0091031A /* FirstVersionViewController.m */; };
 		A0F0D8611F21A92B0091031A /* FirstVersionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0F0D85F1F21A92B0091031A /* FirstVersionViewController.xib */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		A0D1A6A71F260B7100B39F2E /* DanmakuTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DanmakuTime.m; sourceTree = "<group>"; };
 		A0D1A6A81F260B7100B39F2E /* DanmakuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DanmakuView.h; sourceTree = "<group>"; };
 		A0D1A6A91F260B7100B39F2E /* DanmakuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DanmakuView.m; sourceTree = "<group>"; };
+		A0D1A6B61F26280000B39F2E /* VideoDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoDemoViewController.xib; sourceTree = "<group>"; };
 		A0F0D85D1F21A92B0091031A /* FirstVersionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstVersionViewController.h; sourceTree = "<group>"; };
 		A0F0D85E1F21A92B0091031A /* FirstVersionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstVersionViewController.m; sourceTree = "<group>"; };
 		A0F0D85F1F21A92B0091031A /* FirstVersionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirstVersionViewController.xib; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				A0F0D85F1F21A92B0091031A /* FirstVersionViewController.xib */,
 				A021F7CD1F18C0C300448501 /* VideoDemoViewController.h */,
 				A021F7CE1F18C0C300448501 /* VideoDemoViewController.m */,
+				A0D1A6B61F26280000B39F2E /* VideoDemoViewController.xib */,
 				A021F7D61F18C48200448501 /* LiveDemoViewController.h */,
 				A021F7D71F18C48200448501 /* LiveDemoViewController.m */,
 				A036E6C21F1F7FED00010FFD /* LiveDemoViewController.xib */,
@@ -214,6 +217,7 @@
 				TargetAttributes = {
 					A0008CA11AB19AFC009550D7 = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = Z3HFL97CNG;
 					};
 				};
 			};
@@ -245,6 +249,7 @@
 				A0008CB31AB19AFC009550D7 /* Images.xcassets in Resources */,
 				A0F0D8611F21A92B0091031A /* FirstVersionViewController.xib in Resources */,
 				A036E6C31F1F7FEE00010FFD /* LiveDemoViewController.xib in Resources */,
+				A0D1A6B71F26280000B39F2E /* VideoDemoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,7 +428,7 @@
 			baseConfigurationReference = A3076196508C4ABC78FC3BAA /* Pods-HJDanmakuDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = Z3HFL97CNG;
 				INFOPLIST_FILE = HJDanmakuDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -441,7 +446,7 @@
 			baseConfigurationReference = 98B0E2E9F0CB5A3A37788DB8 /* Pods-HJDanmakuDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = Z3HFL97CNG;
 				INFOPLIST_FILE = HJDanmakuDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

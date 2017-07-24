@@ -57,7 +57,7 @@
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-            <point key="canvasLocation" x="-99" y="-85"/>
+            <point key="canvasLocation" x="131" y="-69"/>
         </view>
     </objects>
     <resources>

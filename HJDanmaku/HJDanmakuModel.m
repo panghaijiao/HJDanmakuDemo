@@ -27,4 +27,8 @@
     return self;
 }
 
+- (NSComparisonResult)compare:(HJDanmakuModel *)otherDanmakuModel {
+    return [@(self.time) compare:@(otherDanmakuModel.time)];
+}
+
 @end

@@ -118,6 +118,51 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 @implementation HJDanmakuVideoSource
 
+- (void)prepareDanmakus:(NSArray<HJDanmakuModel *> *)danmakus completion:(void (^)(void))completion {
+    onGlobalThreadAsync(^{
+        NSArray *sortDanmakus = [danmakus sortedArrayUsingSelector:@selector(compare:)];
+        NSMutableArray *agents = [NSMutableArray arrayWithCapacity:sortDanmakus.count];
+        [sortDanmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
+            HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
+            [agents addObject:agent];
+        }];
+        self.danmakuAgents = agents;
+        if (completion) {
+            completion();
+        }
+    });
+}
+
+- (void)sendDanmaku:(HJDanmakuModel *)danmaku forceRender:(BOOL)force {
+    HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
+    agent.force = force;
+    OSSpinLockLock(&_spinLock);
+    [self.danmakuAgents addObject:agent];
+    OSSpinLockUnlock(&_spinLock);
+}
+
+- (void)sendDanmakus:(NSArray<HJDanmakuModel *> *)danmakus {
+    onGlobalThreadAsync(^{
+        u_int interval = 100;
+        NSMutableArray *agents = [NSMutableArray arrayWithCapacity:interval];
+        NSUInteger lastIndex = danmakus.count - 1;
+        [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
+            HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
+            [agents addObject:agent];
+            if (idx == lastIndex || agents.count % interval == 0) {
+                OSSpinLockLock(&_spinLock);
+                [self.danmakuAgents addObjectsFromArray:agents];
+                OSSpinLockUnlock(&_spinLock);
+                [agents removeAllObjects];
+            }
+        }];
+    });
+}
+
+- (NSArray *)fetchDanmakuAgentsForTime:(HJDanmakuTime)time {
+    return nil;
+}
+
 @end
 
 //______________________________
@@ -129,7 +174,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 @implementation HJDanmakuLiveSource
 
 - (void)prepareDanmakus:(NSArray<HJDanmakuModel *> *)danmakus completion:(void (^)(void))completion {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    onGlobalThreadAsync(^{
         NSMutableArray *agents = [NSMutableArray arrayWithCapacity:danmakus.count];
         [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
             HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];

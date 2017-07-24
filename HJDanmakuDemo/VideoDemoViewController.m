@@ -10,6 +10,8 @@
 
 @interface VideoDemoViewController ()
 
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+
 @end
 
 @implementation VideoDemoViewController
@@ -17,11 +19,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
