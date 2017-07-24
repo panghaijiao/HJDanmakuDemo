@@ -98,6 +98,9 @@
 			isa = PBXGroup;
 			children = (
 				A0008CA41AB19AFC009550D7 /* HJDanmakuDemo */,
+				A0B8261D1C1887F6004F6953 /* HJDanmaku */,
+				A03532961F0E19EB006C1B61 /* HJDanmaku2 */,
+				A0008CA51AB19AFC009550D7 /* Supporting Files */,
 				A0008CA31AB19AFC009550D7 /* Products */,
 				A03532A51F0E1EC3006C1B61 /* Frameworks */,
 			);
@@ -128,9 +131,6 @@
 				A08143701F18C6400088BD95 /* DemoDanmakuModel.m */,
 				A08143721F18C9C40088BD95 /* DemoDanmakuCell.h */,
 				A08143731F18C9C40088BD95 /* DemoDanmakuCell.m */,
-				A0B8261D1C1887F6004F6953 /* HJDanmaku */,
-				A03532961F0E19EB006C1B61 /* HJDanmaku2 */,
-				A0008CA51AB19AFC009550D7 /* Supporting Files */,
 			);
 			path = HJDanmakuDemo;
 			sourceTree = "<group>";
@@ -147,6 +147,7 @@
 				A0008CA71AB19AFC009550D7 /* main.m */,
 			);
 			name = "Supporting Files";
+			path = HJDanmakuDemo;
 			sourceTree = "<group>";
 		};
 		A03532961F0E19EB006C1B61 /* HJDanmaku2 */ = {
@@ -414,6 +415,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = HJDanmakuDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -430,6 +432,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = HJDanmakuDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

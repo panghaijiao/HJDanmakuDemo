@@ -23,6 +23,7 @@
 - (instancetype)initWithDanmakuMode:(HJDanmakuMode)danmakuMode {
     if (self = [super init]) {
         self.danmakuMode = danmakuMode;
+        self.duration = 5.0;
         self.tolerance = 2.0f;
     }
     return self;

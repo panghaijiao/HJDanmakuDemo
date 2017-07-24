@@ -14,7 +14,7 @@
 
 @property (readonly) HJDanmakuMode danmakuMode;
 
-// unit second
+// unit second, greater than zero, default 5.0s
 @property (nonatomic) CGFloat duration;
 
 // setting a tolerance for a danmaku render later than the time, unit second, default 2.0s

@@ -9,6 +9,8 @@
 #import "HJDanmakuView.h"
 #import <libkern/OSAtomic.h>
 
+@class HJDanmakuRetainer;
+
 static const CGFloat HJFrameInterval = 0.2;
 
 static inline void onMainThreadAsync(void (^block)()) {
@@ -37,6 +39,9 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 @property (nonatomic, assign) CGFloat py;
 @property (nonatomic, assign) CGSize size;
 
+// the line of trajectory, default -1
+@property (nonatomic, assign) NSInteger yIdx;
+
 - (instancetype)initWithDanmakuModel:(HJDanmakuModel *)danmakuModel;
 
 @end
@@ -46,6 +51,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 - (instancetype)initWithDanmakuModel:(HJDanmakuModel *)danmakuModel {
     if (self = [super init]) {
         self.danmakuModel = danmakuModel;
+        self.yIdx = -1;
     }
     return self;
 }
@@ -203,6 +209,10 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 @property (nonatomic, strong) NSMutableArray <HJDanmakuAgent *> *danmakuQueuePool;
 @property (nonatomic, strong) NSMutableArray <HJDanmakuAgent *> *renderingDanmakus;
 
+@property (nonatomic, strong) NSMutableDictionary <NSNumber *, HJDanmakuAgent *> *LRRetainer;
+@property (nonatomic, strong) NSMutableDictionary <NSNumber *, HJDanmakuAgent *> *FTRetainer;
+@property (nonatomic, strong) NSMutableDictionary <NSNumber *, HJDanmakuAgent *> *FBRetainer;
+
 @end
 
 @implementation HJDanmakuView
@@ -214,6 +224,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 - (instancetype)initWithFrame:(CGRect)frame configuration:(HJDanmakuConfiguration *)configuration {
     if (self = [super initWithFrame:frame]) {
+        self.clipsToBounds = YES;
         self.configuration = configuration;
         self.toleranceCount = (NSUInteger)(fabs(self.configuration.tolerance) / HJFrameInterval);
         self.toleranceCount = MAX(self.toleranceCount, 1);
@@ -221,6 +232,9 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         self.cellReusePool = [NSMutableDictionary dictionary];
         self.danmakuQueuePool = [NSMutableArray array];
         self.renderingDanmakus = [NSMutableArray array];
+        self.LRRetainer = [NSMutableDictionary dictionary];
+        self.FTRetainer = [NSMutableDictionary dictionary];
+        self.FBRetainer = [NSMutableDictionary dictionary];
         self.danmakuSource = [HJDanmakuSource danmakuSourceWithMode:configuration.danmakuMode];
         
         self.sourceQueue = [NSOperationQueue new];
@@ -304,8 +318,8 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 }
 
 - (void)play {
-    if (!self.configuration) {
-        NSAssert(NO, @"configuration nil");
+    if (!self.configuration || self.configuration.duration <= 0) {
+        NSAssert(NO, @"configuration nil or duration <= 0");
         return;
     }
     if (!self.isPrepared) {
@@ -360,8 +374,8 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         for (HJDanmakuAgent *danmakuAgent in danmakuAgents) {
             if (danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR) {
                 CALayer *layer = danmakuAgent.danmakuCell.layer;
-                [danmakuAgent.danmakuCell.layer removeAllAnimations];
                 danmakuAgent.danmakuCell.frame = ((CALayer *)layer.presentationLayer).frame;
+                [danmakuAgent.danmakuCell.layer removeAllAnimations];
             }
         }
     });
@@ -380,7 +394,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     });
 }
 
-#pragma mark - 
+#pragma mark - Render
 
 - (void)update {
     HJDanmakuTime time = {0, HJFrameInterval};
@@ -444,12 +458,18 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 }
 
 - (void)recycleDanmakuAgents:(NSArray *)danmakuAgents {
+    if (danmakuAgents.count == 0) {
+        return;
+    }
     onMainThreadAsync(^{
         for (HJDanmakuAgent *danmakuAgent in danmakuAgents) {
             [danmakuAgent.danmakuCell.layer removeAllAnimations];
             [danmakuAgent.danmakuCell removeFromSuperview];
-            [self recycleCellToReusePool:danmakuAgent.danmakuCell];
+            NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
+            retainer[@(danmakuAgent.yIdx)] = nil;
+            danmakuAgent.yIdx = -1;
             danmakuAgent.isShowing = NO;
+            [self recycleCellToReusePool:danmakuAgent.danmakuCell];
             if ([self.delegate respondsToSelector:@selector(danmakuView:didEndDisplayCell:danmaku:)]) {
                 [self.delegate danmakuView:self didEndDisplayCell:danmakuAgent.danmakuCell danmaku:danmakuAgent.danmakuModel];
             }
@@ -459,36 +479,45 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 - (void)renderNewDanmakusForTime:(HJDanmakuTime)time {
     NSUInteger maxShowCount = self.configuration.maxShowCount > 0 ? self.configuration.maxShowCount : NSUIntegerMax;
+    NSMutableDictionary *renderResult = [NSMutableDictionary dictionary];
     for (HJDanmakuAgent *danmakuAgent in self.danmakuQueuePool) {
-        if (self.renderingDanmakus.count > maxShowCount) {
-            break;
+        NSNumber *retainKey = @(danmakuAgent.danmakuModel.danmakuType);
+        if (!danmakuAgent.force) {
+            if (self.renderingDanmakus.count > maxShowCount) {
+                break;
+            }
+            if (renderResult[@(HJDanmakuTypeLR)] && renderResult[@(HJDanmakuTypeFT)] && renderResult[@(HJDanmakuTypeFB)]) {
+                break;
+            }
+            if (renderResult[retainKey]) {
+                continue;
+            }
         }
         BOOL shouldRender = YES;
         if ([self.delegate respondsToSelector:@selector(danmakuView:shouldRenderDanmaku:)]) {
             shouldRender = [self.delegate danmakuView:self shouldRenderDanmaku:danmakuAgent.danmakuModel];
         }
         if (!shouldRender) {
-            danmakuAgent.toleranceCount = 0;
             continue;
         }
-        [self renderNewDanmaku:danmakuAgent forTime:time];
-        danmakuAgent.toleranceCount = 0;
+        if (![self renderNewDanmaku:danmakuAgent forTime:time]) {
+            renderResult[retainKey] = @(YES);
+        }
     }
 }
 
-- (void)renderNewDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
-    danmakuAgent.isShowing = YES;
+- (BOOL)renderNewDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
+    if (![self layoutNewDanmaku:danmakuAgent forTime:time]) {
+        return NO;
+    }
     [self.renderingDanmakus addObject:danmakuAgent];
-    CGFloat width = [self.dataSource danmakuView:self widthForDanmaku:danmakuAgent.danmakuModel];
-    danmakuAgent.size = CGSizeMake(width, self.configuration.cellHeight);
-    danmakuAgent.px = danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR ? CGRectGetWidth(self.bounds): (CGRectGetMidX(self.bounds) - danmakuAgent.size.width / 2);
-    danmakuAgent.py = 0;
-    NSUInteger zIndex = danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR ? 0: 10;
+    danmakuAgent.toleranceCount = 0;
     onMainThreadAsync(^{
+        danmakuAgent.isShowing = YES;
         danmakuAgent.danmakuCell = ({
             HJDanmakuCell *cell = [self.dataSource danmakuView:self cellForDanmaku:danmakuAgent.danmakuModel];
             cell.frame = (CGRect){CGPointMake(danmakuAgent.px, danmakuAgent.py), danmakuAgent.size};
-            cell.zIndex = cell.zIndex > 0 ? cell.zIndex: zIndex;
+            cell.zIndex = cell.zIndex > 0 ? cell.zIndex: (danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR ? 0: 10);
             cell;
         });
         if ([self.delegate respondsToSelector:@selector(danmakuView:willDisplayCell:danmaku:)]) {
@@ -501,6 +530,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             } completion:nil];
         }
     });
+    return YES;
 }
 
 - (void)removeExpiredDanmakusForTime:(HJDanmakuTime)time {
@@ -510,6 +540,133 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             [self.danmakuQueuePool removeObjectAtIndex:idx];
         }
     }];
+}
+
+#pragma mark - Retainer
+
+- (BOOL)layoutNewDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
+    CGFloat width = [self.dataSource danmakuView:self widthForDanmaku:danmakuAgent.danmakuModel];
+    danmakuAgent.size = CGSizeMake(width, self.configuration.cellHeight);
+    CGFloat py = [self layoutPyWithNewDanmaku:danmakuAgent forTime:time];
+    if (py < 0) {
+        return NO;
+    }
+    danmakuAgent.py = py;
+    danmakuAgent.px = danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR ? CGRectGetWidth(self.bounds): (CGRectGetMidX(self.bounds) - danmakuAgent.size.width / 2);
+    return YES;
+}
+
+- (CGFloat)layoutPyWithNewDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
+    switch (danmakuAgent.danmakuModel.danmakuType) {
+        case HJDanmakuTypeLR:
+            return [self layoutPyWithLRDanmaku:danmakuAgent forTime:time];
+        case HJDanmakuTypeFT:
+            return [self layoutPyWithFTDanmaku:danmakuAgent forTime:time];
+        case HJDanmakuTypeFB:
+            return [self layoutPyWithFBDanmaku:danmakuAgent forTime:time];
+    }
+}
+
+// LR
+- (CGFloat)layoutPyWithLRDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
+    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(self.bounds) / self.configuration.cellHeight);
+    NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
+    for (u_int8_t index = 0; index < maxPyIndex; index++) {
+        NSNumber *key = @(index);
+        HJDanmakuAgent *tempAgent = retainer[key];
+        if (!tempAgent) {
+            danmakuAgent.yIdx = index;
+            retainer[key] = danmakuAgent;
+            return self.configuration.cellHeight * index;
+        }
+        if (![self checkLRIsWillHitWithPreDanmaku:tempAgent danmaku:danmakuAgent]) {
+            danmakuAgent.yIdx = index;
+            retainer[key] = danmakuAgent;
+            return self.configuration.cellHeight * index;
+        }
+    }
+    return -1;
+}
+
+- (BOOL)checkLRIsWillHitWithPreDanmaku:(HJDanmakuAgent *)preDanmakuAgent danmaku:(HJDanmakuAgent *)danmakuAgent {
+    if (preDanmakuAgent.remainingTime <= 0) {
+        return NO;
+    }
+    CGFloat width = CGRectGetWidth(self.bounds);
+    CGFloat preDanmakuSpeed = (width + preDanmakuAgent.size.width) / self.configuration.duration;
+    if (preDanmakuSpeed * (self.configuration.duration - preDanmakuAgent.remainingTime) < preDanmakuAgent.size.width) {
+        return YES;
+    }
+    CGFloat curDanmakuSpeed = (width + danmakuAgent.size.width) / self.configuration.duration;
+    if (curDanmakuSpeed * preDanmakuAgent.remainingTime > width) {
+        return YES;
+    }
+    return NO;
+}
+
+// FT
+- (CGFloat)layoutPyWithFTDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
+    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(self.bounds) / 2.0 / self.configuration.cellHeight);
+    NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
+    for (u_int8_t index = 0; index < maxPyIndex; index++) {
+        NSNumber *key = @(index);
+        HJDanmakuAgent *tempAgent = retainer[key];
+        if (!tempAgent) {
+            danmakuAgent.yIdx = index;
+            retainer[key] = danmakuAgent;
+            return self.configuration.cellHeight * index;
+        }
+        if (![self checkFTIsWillHitWithPreDanmaku:tempAgent danmaku:danmakuAgent]) {
+            danmakuAgent.yIdx = index;
+            retainer[key] = danmakuAgent;
+            return self.configuration.cellHeight * index;
+        }
+    }
+    return -1;
+}
+
+- (BOOL)checkFTIsWillHitWithPreDanmaku:(HJDanmakuAgent *)preDanmakuAgent danmaku:(HJDanmakuAgent *)danmakuAgent {
+    if (preDanmakuAgent.remainingTime <= 0) {
+        return NO;
+    }
+    return YES;
+}
+
+// FB
+- (CGFloat)layoutPyWithFBDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
+    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(self.bounds) / 2.0 / self.configuration.cellHeight);
+    NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
+    for (u_int8_t index = 0; index < maxPyIndex; index++) {
+        NSNumber *key = @(index);
+        HJDanmakuAgent *tempAgent = retainer[key];
+        if (!tempAgent) {
+            danmakuAgent.yIdx = index;
+            retainer[key] = danmakuAgent;
+            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * index;
+        }
+        if (![self checkFBIsWillHitWithPreDanmaku:tempAgent danmaku:danmakuAgent]) {
+            danmakuAgent.yIdx = index;
+            retainer[key] = danmakuAgent;
+            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * index;
+        }
+    }
+    return -1;
+}
+
+- (BOOL)checkFBIsWillHitWithPreDanmaku:(HJDanmakuAgent *)preDanmakuAgent danmaku:(HJDanmakuAgent *)danmakuAgent {
+    if (preDanmakuAgent.remainingTime <= 0) {
+        return NO;
+    }
+    return YES;
+}
+
+- (NSMutableDictionary *)retainerWithType:(HJDanmakuType)danmakuType {
+    switch (danmakuType) {
+        case HJDanmakuTypeLR:return self.LRRetainer;
+        case HJDanmakuTypeFT:return self.FTRetainer;
+        case HJDanmakuTypeFB:return self.FBRetainer;
+        default:return nil;
+    }
 }
 
 #pragma mark -

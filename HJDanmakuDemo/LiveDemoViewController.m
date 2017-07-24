@@ -67,7 +67,7 @@
 
 - (void)randomSendNewDanmaku {
     DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
-    danmaku.text = @"^^^";
+    danmaku.text = @"<<<================>>>";
     danmaku.textFont = [UIFont systemFontOfSize:20];
     danmaku.textColor = [UIColor redColor];
     [self.danmakuView sendDanmaku:danmaku forceRender:NO];
