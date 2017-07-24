@@ -7,8 +7,6 @@
 
 A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
 
-![](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmakuDemo.jpg)
-
 ## Installation with CocoaPods
 
 [CocoaPods](http://cocoapods.org/) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries in your projects. See the [Get Started](http://cocoapods.org/#get_started) section for more details.
