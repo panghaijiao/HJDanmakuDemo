@@ -22,11 +22,12 @@ pod 'HJDanmaku', :git => 'https://github.com/panghaijiao/HJDanmakuDemo.git'
 ### Video mode
 
 ```
+// init config with mode HJDanmakuModeLive
 HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeLive];
-self.danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
-self.danmakuView.dataSource = self;
-self.danmakuView.delegate = self;
-[self.view insertSubview:self.danmakuView aboveSubview:self.imageView];
+HJDanmakuView *danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
+
+// configure dataSource of danmakuView
+danmakuView.dataSource = self;
 ```
 
 ### Audio mode
