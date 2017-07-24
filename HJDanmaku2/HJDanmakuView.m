@@ -363,6 +363,9 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     [self recycleDanmakuAgents:[self.renderingDanmakus copy]];
     dispatch_async(_renderQueue, ^{
         [self.renderingDanmakus removeAllObjects];
+        [self.LRRetainer removeAllObjects];
+        [self.FTRetainer removeAllObjects];
+        [self.FBRetainer removeAllObjects];
     });
 }
 
@@ -465,8 +468,6 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         for (HJDanmakuAgent *danmakuAgent in danmakuAgents) {
             [danmakuAgent.danmakuCell.layer removeAllAnimations];
             [danmakuAgent.danmakuCell removeFromSuperview];
-            NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
-            retainer[@(danmakuAgent.yIdx)] = nil;
             danmakuAgent.yIdx = -1;
             danmakuAgent.isShowing = NO;
             [self recycleCellToReusePool:danmakuAgent.danmakuCell];
