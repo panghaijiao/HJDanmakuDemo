@@ -1,7 +1,7 @@
 # HJDanmaku
 
 ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
-![](https://img.shields.io/badge/pod-v0.4.1-blue.svg)
+![](https://img.shields.io/badge/Cocoapods-v1.1.1-blue.svg)
 ![](https://img.shields.io/badge/language-objc-5787e5.svg)
 ![](https://img.shields.io/badge/license-MIT-brightgreen.svg)  
 
@@ -17,8 +17,23 @@ A high performance danmaku engine for iOS. For more details please click [here](
 pod 'HJDanmaku', :git => 'https://github.com/panghaijiao/HJDanmakuDemo.git'
 ```
 
+## Usage
+
+### Video mode
+
+```
+HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeLive];
+self.danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
+self.danmakuView.dataSource = self;
+self.danmakuView.delegate = self;
+[self.view insertSubview:self.danmakuView aboveSubview:self.imageView];
+```
+
+### Audio mode
+
 
 ## License:  
 
-HJDanmakuDemo is released under the MIT license. See LICENSE for details. Copyright (c) 2015 olinone
+HJDanmakuDemo is released under the MIT license. See LICENSE for details.
+Copyright (c) 2015 olinone
 
