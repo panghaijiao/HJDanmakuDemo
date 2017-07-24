@@ -25,9 +25,6 @@ pod 'HJDanmaku', :git => 'https://github.com/panghaijiao/HJDanmakuDemo.git'
 // init config with mode HJDanmakuModeLive
 HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeLive];
 HJDanmakuView *danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
-
-// configure dataSource of danmakuView
-danmakuView.dataSource = self;
 ```
 
 #### Video Mode (developing)
@@ -36,9 +33,6 @@ danmakuView.dataSource = self;
 // init config with mode HJDanmakuModeVideo
 HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeVideo];
 HJDanmakuView *danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
-
-// configure dataSource of danmakuView
-danmakuView.dataSource = self;
 ```
 
 
