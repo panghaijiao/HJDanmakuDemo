@@ -15,4 +15,6 @@
 + (DanmakuBaseModel *)createDanmakuWithDanmakuSource:(DanmakuSource *)danmakuSource
                                        configuration:(DanmakuConfiguration *)configuration;
 
++ (UIColor *)colorWithHexStr:(NSString *)str;
+
 @end

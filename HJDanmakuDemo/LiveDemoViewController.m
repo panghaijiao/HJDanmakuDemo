@@ -10,8 +10,12 @@
 #import "HJDanmakuView.h"
 #import "DemoDanmakuModel.h"
 #import "DemoDanmakuCell.h"
+#import "DanmakuFactory.h"
 
 @interface LiveDemoViewController () <HJDanmakuViewDateSource, HJDanmakuViewDelegate>
+
+@property (nonatomic, assign) NSUInteger index;
+@property (nonatomic, strong) NSArray *danmakus;
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
@@ -38,13 +42,16 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeLive];
     config.duration = 5.0f;
-    config.cellHeight = 40.0f;
+    config.cellHeight = 30.0f;
     self.danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
     self.danmakuView.dataSource = self;
     self.danmakuView.delegate = self;
     [self.danmakuView registerClass:[DemoDanmakuCell class] forCellReuseIdentifier:@"cell"];
     self.danmakuView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view insertSubview:self.danmakuView aboveSubview:self.imageView];
+    
+    NSString *danmakufile = [[NSBundle mainBundle] pathForResource:@"danmakufile" ofType:nil];
+    self.danmakus = [NSArray arrayWithContentsOfFile:danmakufile];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -66,10 +73,18 @@
 }
 
 - (void)randomSendNewDanmaku {
-    DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
-    danmaku.text = @"<<<================>>>";
-    danmaku.textFont = [UIFont systemFontOfSize:20];
-    danmaku.textColor = [UIColor redColor];
+    self.index ++;
+    if (self.index >= self.danmakus.count) {
+        return;
+    }
+    NSDictionary *danamku = self.danmakus[self.index];
+    NSArray *pArray = [danamku[@"p"] componentsSeparatedByString:@","];
+    
+    HJDanmakuType type = [pArray[1] integerValue] % 3;
+    DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:type];
+    danmaku.text = danamku[@"m"];
+    danmaku.textFont = [pArray[2] integerValue] == 1 ? [UIFont systemFontOfSize:20]: [UIFont systemFontOfSize:18];
+    danmaku.textColor = [DanmakuFactory colorWithHexStr:pArray[3]];
     [self.danmakuView sendDanmaku:danmaku forceRender:NO];
 }
 
