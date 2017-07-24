@@ -35,8 +35,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    
     NSMutableArray *newArr = [NSMutableArray arrayWithCapacity:6];
     for (int i = 0; i < 6; i++) {
         UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", i]];

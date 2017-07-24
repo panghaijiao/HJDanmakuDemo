@@ -49,9 +49,6 @@
             break;
     }
     [self.navigationController pushViewController:vc animated:YES];
-    
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    vc.title = cell.textLabel.text;
 }
 
 #pragma mark -
