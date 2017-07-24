@@ -64,8 +64,12 @@ cell.textLabel.textColor = model.textColor;
 cell.textLabel.text = model.text;
 ```
 
-## License:  
+##  History Release
+
+HJDanmaku 1.0 was first released in 2015, You can get it in the folder [HJDanmaku1](https://github.com/panghaijiao/HJDanmakuDemo/tree/master/HJDanmaku1). Surely, for better performance, we recommend the latest version 2.0.
+
+## License
 
 HJDanmakuDemo is released under the MIT license. See LICENSE for details.
-Copyright (c) 2015 olinone
+Copyright (c) 2015 olinone.
 
