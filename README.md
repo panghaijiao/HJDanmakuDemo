@@ -41,6 +41,29 @@ HJDanmakuView *danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.boun
 danmakuView.dataSource = self;
 ```
 
+
+#### Send Danmaku
+
+```
+DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
+danmaku.text = @"😊😊olinone.com😊😊";
+[self.danmakuView sendDanmaku:danmaku forceRender:YES];
+```
+
+#### Custom style
+
+```
+// register cell class before dequeue
+[self.danmakuView registerClass:[DemoDanmakuCell class] forCellReuseIdentifier:@"cell"];
+
+// configure cell with custom style
+DemoDanmakuCell *cell = [danmakuView dequeueReusableCellWithIdentifier:@"cell"];
+DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
+cell.textLabel.font = model.textFont;
+cell.textLabel.textColor = model.textColor;
+cell.textLabel.text = model.text;
+```
+
 ## License:  
 
 HJDanmakuDemo is released under the MIT license. See LICENSE for details.
