@@ -700,19 +700,19 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         if (!tempAgent) {
             danmakuAgent.yIdx = index;
             retainer[key] = danmakuAgent;
-            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * index;
+            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * (index + 1);
         }
         if (![self checkFBIsWillHitWithPreDanmaku:tempAgent danmaku:danmakuAgent]) {
             danmakuAgent.yIdx = index;
             retainer[key] = danmakuAgent;
-            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * index;
+            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * (index + 1);
         }
     }
     if (danmakuAgent.force) {
         u_int8_t index = arc4random() % maxPyIndex;
         danmakuAgent.yIdx = index;
         retainer[@(index)] = danmakuAgent;
-        return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * index;
+        return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * (index + 1);
     }
     return -1;
 }

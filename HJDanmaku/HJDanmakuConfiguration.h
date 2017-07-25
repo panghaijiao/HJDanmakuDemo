@@ -23,7 +23,7 @@
 // default 0, full screen
 @property (nonatomic) NSInteger numberOfLines;
 
-// height of single line cell, avoid modify after initialization
+// height of single line cell, avoid modify after initialization, default 30.0f
 @property (nonatomic) CGFloat cellHeight;
 
 // the maximum number of danmakus at the same time, default 0, adapt to the height of screen

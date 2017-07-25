@@ -25,6 +25,7 @@
         self.danmakuMode = danmakuMode;
         self.duration = 5.0;
         self.tolerance = 2.0f;
+        self.cellHeight = 30.0f;
     }
     return self;
 }
