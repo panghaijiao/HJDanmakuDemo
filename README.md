@@ -5,11 +5,11 @@
 ![](https://img.shields.io/badge/language-objc-5787e5.svg)
 ![](https://img.shields.io/badge/license-MIT-brightgreen.svg)  
 
-A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
-
 ![GitHub set up-w140](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmakuDemo.jpg)
 
 ## Feature
+
+A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
 
 Dimension | 1.0| 2.0
 --------- | ------------- | -------------
