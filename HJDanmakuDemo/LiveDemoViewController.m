@@ -40,7 +40,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeLive];
-    config.cellHeight = 30.0f;
     self.danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
     self.danmakuView.dataSource = self;
     self.danmakuView.delegate = self;

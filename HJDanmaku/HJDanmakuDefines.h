@@ -25,8 +25,8 @@ typedef struct {
     CGFloat interval;
 } HJDanmakuTime;
 
-NS_INLINE NSUInteger NSMaxTime(HJDanmakuTime time) {
-    return (time.time + time.interval);
+NS_INLINE CGFloat HJMaxTime(HJDanmakuTime time) {
+    return time.time + time.interval;
 }
 
 #endif /* HJDanmakuDefines_h */

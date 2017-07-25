@@ -12,6 +12,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VideoDemoViewController">
             <connections>
                 <outlet property="imageView" destination="YU6-zx-QEo" id="tL3-Vp-JEw"/>
+                <outlet property="progressSlider" destination="aah-AR-tbu" id="qrl-Le-UwN"/>
+                <outlet property="timeLabel" destination="Hst-bZ-VQV" id="3lQ-NR-RGu"/>
                 <outlet property="view" destination="iN0-l3-epB" id="smJ-O0-BVW"/>
             </connections>
         </placeholder>
@@ -32,11 +34,17 @@
                             <rect key="frame" x="17" y="8" width="46" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <state key="normal" title="Play"/>
+                            <connections>
+                                <action selector="onPlayBtnClick:" destination="-1" eventType="touchUpInside" id="eG9-NJ-U5o"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cUH-0W-Gsa">
                             <rect key="frame" x="84" y="8" width="56" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <state key="normal" title="Pause"/>
+                            <connections>
+                                <action selector="onPauseBtnClick:" destination="-1" eventType="touchUpInside" id="kf1-oy-vMn"/>
+                            </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0s" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hst-bZ-VQV">
                             <rect key="frame" x="153" y="12" width="42" height="21"/>
@@ -56,6 +64,9 @@
                             <state key="normal" title="Send">
                                 <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
+                            <connections>
+                                <action selector="onSendClick:" destination="-1" eventType="touchUpInside" id="xIM-KG-mkE"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>

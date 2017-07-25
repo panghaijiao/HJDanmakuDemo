@@ -19,6 +19,4 @@
 
 - (instancetype)initWithType:(HJDanmakuType)danmakuType NS_DESIGNATED_INITIALIZER;
 
-- (NSComparisonResult)compare:(HJDanmakuModel *)otherDanmakuModel;
-
 @end

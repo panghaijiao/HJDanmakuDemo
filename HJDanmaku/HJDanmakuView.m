@@ -44,6 +44,8 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 - (instancetype)initWithDanmakuModel:(HJDanmakuModel *)danmakuModel;
 
+- (NSComparisonResult)compare:(HJDanmakuAgent *)otherDanmakuAgent;
+
 @end
 
 @implementation HJDanmakuAgent
@@ -54,6 +56,10 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         self.yIdx = -1;
     }
     return self;
+}
+
+- (NSComparisonResult)compare:(HJDanmakuAgent *)otherDanmakuAgent {
+    return [@(self.danmakuModel.time) compare:@(otherDanmakuAgent.danmakuModel.time)];
 }
 
 @end
@@ -114,19 +120,24 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 @interface HJDanmakuVideoSource : HJDanmakuSource
 
+@property (nonatomic, assign) NSUInteger lastIndex;
+
 @end
 
 @implementation HJDanmakuVideoSource
 
 - (void)prepareDanmakus:(NSArray<HJDanmakuModel *> *)danmakus completion:(void (^)(void))completion {
     onGlobalThreadAsync(^{
-        NSArray *sortDanmakus = [danmakus sortedArrayUsingSelector:@selector(compare:)];
-        NSMutableArray *agents = [NSMutableArray arrayWithCapacity:sortDanmakus.count];
-        [sortDanmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
+        NSMutableArray *danmakuAgents = [NSMutableArray arrayWithCapacity:danmakus.count];
+        [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
             HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
-            [agents addObject:agent];
+            [danmakuAgents addObject:agent];
         }];
-        self.danmakuAgents = agents;
+        NSArray *sortDanmakuAgents = [danmakuAgents sortedArrayUsingSelector:@selector(compare:)];
+        OSSpinLockLock(&_spinLock);
+        self.danmakuAgents = [NSMutableArray arrayWithArray:sortDanmakuAgents];
+        self.lastIndex = 0;
+        OSSpinLockUnlock(&_spinLock);
         if (completion) {
             completion();
         }
@@ -134,33 +145,73 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 }
 
 - (void)sendDanmaku:(HJDanmakuModel *)danmaku forceRender:(BOOL)force {
-    HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
-    agent.force = force;
+    HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
+    danmakuAgent.force = force;
     OSSpinLockLock(&_spinLock);
-    [self.danmakuAgents addObject:agent];
+    NSUInteger index = [self indexOfDanmakuAgent:danmakuAgent];
+    [self.danmakuAgents insertObject:danmakuAgent atIndex:index];
+    self.lastIndex = 0;
     OSSpinLockUnlock(&_spinLock);
+}
+
+- (NSUInteger)indexOfDanmakuAgent:(HJDanmakuAgent *)danmakuAgent {
+    NSUInteger count = self.danmakuAgents.count;
+    if (count == 0) {
+        return 0;
+    }
+    NSUInteger index = [self.danmakuAgents indexOfObjectPassingTest:^BOOL(HJDanmakuAgent *tempDanmakuAgent, NSUInteger idx, BOOL *stop) {
+        return danmakuAgent.danmakuModel.time <= tempDanmakuAgent.danmakuModel.time;
+    }];
+    if (index == NSNotFound) {
+        return count;
+    }
+    return index;
 }
 
 - (void)sendDanmakus:(NSArray<HJDanmakuModel *> *)danmakus {
     onGlobalThreadAsync(^{
-        u_int interval = 100;
-        NSMutableArray *agents = [NSMutableArray arrayWithCapacity:interval];
-        NSUInteger lastIndex = danmakus.count - 1;
+        OSSpinLockLock(&_spinLock);
+        NSMutableArray *danmakuAgents = [NSMutableArray arrayWithArray:self.danmakuAgents];
+        OSSpinLockUnlock(&_spinLock);
         [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
-            HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
-            [agents addObject:agent];
-            if (idx == lastIndex || agents.count % interval == 0) {
-                OSSpinLockLock(&_spinLock);
-                [self.danmakuAgents addObjectsFromArray:agents];
-                OSSpinLockUnlock(&_spinLock);
-                [agents removeAllObjects];
-            }
+            HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
+            [danmakuAgents addObject:danmakuAgent];
         }];
+        NSArray *sortDanmakuAgents = [danmakuAgents sortedArrayUsingSelector:@selector(compare:)];
+        OSSpinLockLock(&_spinLock);
+        self.danmakuAgents = [NSMutableArray arrayWithArray:sortDanmakuAgents];
+        self.lastIndex = 0;
+        OSSpinLockUnlock(&_spinLock);
     });
 }
 
 - (NSArray *)fetchDanmakuAgentsForTime:(HJDanmakuTime)time {
-    return nil;
+    OSSpinLockLock(&_spinLock);
+    NSUInteger lastIndex = self.lastIndex < self.danmakuAgents.count ? self.lastIndex: NSNotFound;
+    if (lastIndex == NSNotFound) {
+        OSSpinLockUnlock(&_spinLock);
+        return nil;
+    }
+    HJDanmakuAgent *lastDanmakuAgent = self.danmakuAgents[self.lastIndex];
+    if (time.time < lastDanmakuAgent.danmakuModel.time) {
+        lastIndex = 0;
+    }    
+    CGFloat minTime = floorf(time.time * 10) / 10.0f;
+    CGFloat maxTime = HJMaxTime(time);
+    NSIndexSet *indexSet = [self.danmakuAgents indexesOfObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(lastIndex, self.danmakuAgents.count - lastIndex)] options:NSEnumerationConcurrent passingTest:^BOOL(HJDanmakuAgent *danmakuAgent, NSUInteger idx, BOOL *stop) {
+        if (danmakuAgent.danmakuModel.time > maxTime) {
+            *stop = YES;
+        }
+        return danmakuAgent.remainingTime <= 0 && danmakuAgent.danmakuModel.time >= minTime && danmakuAgent.danmakuModel.time < maxTime;
+    }];
+    if (indexSet.count == 0) {
+        OSSpinLockUnlock(&_spinLock);
+        return nil;
+    }
+    NSArray *danmakuAgents = [self.danmakuAgents objectsAtIndexes:indexSet];
+    self.lastIndex = indexSet.firstIndex;
+    OSSpinLockUnlock(&_spinLock);
+    return danmakuAgents;
 }
 
 @end
@@ -175,12 +226,14 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 - (void)prepareDanmakus:(NSArray<HJDanmakuModel *> *)danmakus completion:(void (^)(void))completion {
     onGlobalThreadAsync(^{
-        NSMutableArray *agents = [NSMutableArray arrayWithCapacity:danmakus.count];
+        NSMutableArray *danmakuAgents = [NSMutableArray arrayWithCapacity:danmakus.count];
         [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
-            HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
-            [agents addObject:agent];
+            HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
+            [danmakuAgents addObject:danmakuAgent];
         }];
-        self.danmakuAgents = agents;
+        OSSpinLockLock(&_spinLock);
+        self.danmakuAgents = danmakuAgents;
+        OSSpinLockUnlock(&_spinLock);
         if (completion) {
             completion();
         }
@@ -188,26 +241,26 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 }
 
 - (void)sendDanmaku:(HJDanmakuModel *)danmaku forceRender:(BOOL)force {
-    HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
-    agent.force = force;
+    HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
+    danmakuAgent.force = force;
     OSSpinLockLock(&_spinLock);
-    [self.danmakuAgents addObject:agent];
+    [self.danmakuAgents addObject:danmakuAgent];
     OSSpinLockUnlock(&_spinLock);
 }
 
 - (void)sendDanmakus:(NSArray<HJDanmakuModel *> *)danmakus {
     onGlobalThreadAsync(^{
         u_int interval = 100;
-        NSMutableArray *agents = [NSMutableArray arrayWithCapacity:interval];
+        NSMutableArray *danmakuAgents = [NSMutableArray arrayWithCapacity:interval];
         NSUInteger lastIndex = danmakus.count - 1;
         [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
             HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
-            [agents addObject:agent];
-            if (idx == lastIndex || agents.count % interval == 0) {
+            [danmakuAgents addObject:agent];
+            if (idx == lastIndex || danmakuAgents.count % interval == 0) {
                 OSSpinLockLock(&_spinLock);
-                [self.danmakuAgents addObjectsFromArray:agents];
+                [self.danmakuAgents addObjectsFromArray:danmakuAgents];
                 OSSpinLockUnlock(&_spinLock);
-                [agents removeAllObjects];
+                [danmakuAgents removeAllObjects];
             }
         }];
     });
@@ -353,6 +406,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     }
     
     [self.danmakuSource prepareDanmakus:danmakus completion:^{
+        [self preloadDanmakusWhenPrepare];
         self.isPrepared = YES;
         onMainThreadAsync(^{
             if ([self.delegate respondsToSelector:@selector(prepareCompletedWithDanmakuView:)]) {
@@ -416,6 +470,21 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 #pragma mark -
 
+- (void)preloadDanmakusWhenPrepare {
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        NSArray <HJDanmakuAgent *> *danmakuAgents = [self.danmakuSource fetchDanmakuAgentsForTime:self.playTime];
+        for (HJDanmakuAgent *danmakuAgent in danmakuAgents) {
+            danmakuAgent.remainingTime = self.configuration.duration;
+            danmakuAgent.toleranceCount = self.toleranceCount;
+        }
+        dispatch_async(_renderQueue, ^{
+            [self.danmakuQueuePool addObjectsFromArray:danmakuAgents];
+        });
+    }];
+    [self.sourceQueue cancelAllOperations];
+    [self.sourceQueue addOperation:operation];
+}
+
 - (void)pauseDisplayingDanmakus {
     NSArray *danmakuAgents = [self visibleDanmakuAgents];
     onMainThreadAsync(^{
@@ -464,14 +533,15 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 - (void)loadDanmakusFromSourceForTime:(HJDanmakuTime)time {
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-        NSArray <HJDanmakuAgent *> *danmakuAgents = [self.danmakuSource fetchDanmakuAgentsForTime:(HJDanmakuTime){NSMaxTime(time), time.interval}];
+        NSArray <HJDanmakuAgent *> *danmakuAgents = [self.danmakuSource fetchDanmakuAgentsForTime:(HJDanmakuTime){HJMaxTime(time), time.interval}];
         danmakuAgents = [danmakuAgents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"remainingTime <= 0"]];
         for (HJDanmakuAgent *danmakuAgent in danmakuAgents) {
             danmakuAgent.remainingTime = self.configuration.duration;
             danmakuAgent.toleranceCount = self.toleranceCount;
         }
+        NSLog(@"%f %ld", time.time, danmakuAgents.count);
         dispatch_async(_renderQueue, ^{
-            if (time.time < self.playTime.time || time.time > self.playTime.time + self.configuration.tolerance) {
+            if (time.time < self.playTime.time || time.time > HJMaxTime(self.playTime) + self.configuration.tolerance) {
                 [self.danmakuQueuePool removeAllObjects];
             }
             if (danmakuAgents.count > 0) {

@@ -45,7 +45,7 @@
     [_imgView startAnimating];
     
     DanmakuConfiguration *configuration = [[DanmakuConfiguration alloc] init];
-    configuration.duration = 6.5;
+    configuration.duration = 5;
     configuration.paintHeight = 21;
     configuration.fontSize = 17;
     configuration.largeFontSize = 19;
