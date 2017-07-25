@@ -18,6 +18,8 @@
 @property (nonatomic, strong) NSArray *danmakus;
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet UIView *panelView;
+@property (nonatomic, weak) IBOutlet UISlider *alphaSlider;
 
 @property (nonatomic, strong) HJDanmakuView *danmakuView;
 @property (nonatomic, strong) NSTimer *timer;
@@ -99,6 +101,27 @@
     [self.danmakuView sendDanmaku:danmakuModel forceRender:YES];
 }
 
+- (IBAction)onSetBtnClick:(UIButton *)sender {
+    sender.selected = !sender.isSelected;
+    CGRect rect = self.panelView.frame;
+    rect.size.height = sender.isSelected ? 83: 45;
+    rect.origin.y = CGRectGetHeight(self.view.bounds) - rect.size.height;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.panelView.frame = rect;
+    }];
+}
+
+- (IBAction)onAlphaChange:(UISlider *)sender {
+    NSArray <HJDanmakuCell *> *cells = self.danmakuView.visibleCells;
+    for (HJDanmakuCell *cell in cells) {
+        cell.alpha = sender.value;
+    }
+}
+
+- (IBAction)onCountChange:(UISlider *)sender {
+    self.danmakuView.configuration.maxShowCount = sender.value * 30;
+}
+
 #pragma mark - delegate
 
 - (void)prepareCompletedWithDanmakuView:(HJDanmakuView *)danmakuView {
@@ -115,6 +138,7 @@
 - (HJDanmakuCell *)danmakuView:(HJDanmakuView *)danmakuView cellForDanmaku:(HJDanmakuModel *)danmaku {
     DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
     DemoDanmakuCell *cell = [danmakuView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.alpha = self.alphaSlider.value;
     if (model.selfFlag) {
         cell.zIndex = 30;
         cell.layer.borderWidth = 0.5;

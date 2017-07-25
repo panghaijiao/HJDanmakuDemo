@@ -34,16 +34,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    NSMutableArray *newArr = [NSMutableArray arrayWithCapacity:6];
-    for (int i = 0; i < 6; i++) {
-        UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg", i]];
-        [newArr addObject:img];
-    }
-    _imgView.animationImages = newArr;
-    _imgView.animationDuration = 20;
-    [_imgView startAnimating];
-    
+    self.view.backgroundColor = [UIColor whiteColor];    
     DanmakuConfiguration *configuration = [[DanmakuConfiguration alloc] init];
     configuration.duration = 5;
     configuration.paintHeight = 21;

@@ -67,7 +67,7 @@
 // 字典组成的数组，已弃用，推荐prepareDanmakuSources
 // "p": "25,1,0,FFFFFF,0",
 // "m": "olinone.com"
-- (void)prepareDanmakus:(NSArray *)danmakus;
+- (void)prepareDanmakus:(NSArray <NSDictionary *> *)danmakus;
 
 @end
 

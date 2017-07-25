@@ -82,7 +82,7 @@
 
 #pragma mark - Interface
 
-- (void)prepareDanmakus:(NSArray *)danmakus {
+- (void)prepareDanmakus:(NSArray <NSDictionary *> *)danmakus {
     self.isPrepared = NO;
     self.danmakus = nil;
     self.curDanmakus = nil;
