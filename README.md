@@ -15,9 +15,9 @@ Compared to the version 1.0, HJDanmaku 2.0 has better performance, Such as high 
 
 #### Fearture
 
-*  [Performance] The average CPU usage for total is less than 5% .
-*  [Fluency] The rendering frame rate (FPS) is stable at 60 frames.
-*  [Concurrency] Off screen rendering ensures the stability of large concurrent data. 
+*  `[Performance]` The average CPU usage for total is less than 5% .
+*  `[Fluency]` The rendering frame rate (FPS) is stable at 60 frames.
+*  `[Concurrency]` Off screen rendering ensures the stability of large concurrent data. 
 
 #### Reference
 
