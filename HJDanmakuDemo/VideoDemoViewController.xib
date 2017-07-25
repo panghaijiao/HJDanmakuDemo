@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VideoDemoViewController">
             <connections>
+                <outlet property="bufferBtn" destination="dRL-2J-hQV" id="4I3-Zm-5LT"/>
                 <outlet property="imageView" destination="YU6-zx-QEo" id="tL3-Vp-JEw"/>
                 <outlet property="progressSlider" destination="aah-AR-tbu" id="qrl-Le-UwN"/>
                 <outlet property="timeLabel" destination="Hst-bZ-VQV" id="3lQ-NR-RGu"/>
@@ -51,12 +52,13 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="aah-AR-tbu">
-                            <rect key="frame" x="210" y="8" width="352" height="31"/>
+                            <rect key="frame" x="208" y="8" width="306" height="31"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <color key="thumbTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </slider>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q1J-TD-CJL">
                             <rect key="frame" x="600" y="8" width="46" height="30"/>
@@ -68,11 +70,21 @@
                                 <action selector="onSendClick:" destination="-1" eventType="touchUpInside" id="xIM-KG-mkE"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dRL-2J-hQV">
+                            <rect key="frame" x="532" y="9" width="48" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                            <state key="normal" title="Buffer"/>
+                            <connections>
+                                <action selector="onBufferBtnClick:" destination="-1" eventType="touchUpInside" id="6k7-2a-Osg"/>
+                                <action selector="onSendClick:" destination="-1" eventType="touchUpInside" id="hLH-oV-auU"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <point key="canvasLocation" x="24.5" y="52.5"/>
         </view>
     </objects>
     <resources>

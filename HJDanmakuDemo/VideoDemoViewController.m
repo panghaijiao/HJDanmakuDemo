@@ -17,6 +17,7 @@
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 @property (nonatomic, weak) IBOutlet UISlider *progressSlider;
+@property (nonatomic, weak) IBOutlet UIButton *bufferBtn;
 
 @property (nonatomic, strong) HJDanmakuView *danmakuView;
 @property (nonatomic, strong) NSTimer *timer;
@@ -60,18 +61,6 @@
         [danmakuModels addObject:danmakuModel];
     }
     [self.danmakuView prepareDanmakus:danmakuModels];
-    
-    
-//    NSMutableArray *danmakuModels = [NSMutableArray array];
-//    for (NSUInteger index = 1; index < 100; index++) {
-//        DemoDanmakuModel *danmakuModel = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
-//        danmakuModel.time = index;
-//        danmakuModel.text = [@(index) stringValue];
-//        danmakuModel.textFont = [UIFont systemFontOfSize:20];
-//        danmakuModel.textColor = [UIColor redColor];
-//        [danmakuModels addObject:danmakuModel];
-//    }
-//    [self.danmakuView prepareDanmakus:danmakuModels];
 }
 
 #pragma mark -
@@ -108,6 +97,10 @@
     [self.danmakuView sendDanmaku:danmakuModel forceRender:YES];
 }
 
+- (IBAction)onBufferBtnClick:(UIButton *)sender {
+    sender.selected = !sender.isSelected;
+}
+
 #pragma mark - delegate
 
 - (void)prepareCompletedWithDanmakuView:(HJDanmakuView *)danmakuView {
@@ -115,6 +108,10 @@
 }
 
 #pragma mark - dataSource
+
+- (BOOL)bufferingWithDanmakuView:(HJDanmakuView *)danmakuView {
+    return self.bufferBtn.isSelected;
+}
 
 - (float)playTimeWithDanmakuView:(HJDanmakuView *)danmakuView {
     return self.progressSlider.value * 120.0;

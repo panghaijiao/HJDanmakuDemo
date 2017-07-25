@@ -539,7 +539,6 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             danmakuAgent.remainingTime = self.configuration.duration;
             danmakuAgent.toleranceCount = self.toleranceCount;
         }
-        NSLog(@"%f %ld", time.time, danmakuAgents.count);
         dispatch_async(_renderQueue, ^{
             if (time.time < self.playTime.time || time.time > HJMaxTime(self.playTime) + self.configuration.tolerance) {
                 [self.danmakuQueuePool removeAllObjects];
