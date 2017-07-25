@@ -5,11 +5,21 @@
 ![](https://img.shields.io/badge/language-objc-5787e5.svg)
 ![](https://img.shields.io/badge/license-MIT-brightgreen.svg)  
 
+A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
+
 ![GitHub set up-w140](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmakuDemo.jpg)
 
-## Feature
+## Overview
 
-A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
+Compared to the version 1.0, HJDanmaku 2.0 has better performance, Such as high performance, large concurrent and better fluency. surely, you can customize the cell style according to product requirements. In version 2.0，it provides a new live mode to meet the live scene.
+
+#### Fearture
+
+*  [Performance] The average CPU usage for total is less than 5% .
+*  [Fluency] The rendering frame rate (FPS) is stable at 60 frames.
+*  [Concurrency] Off screen rendering ensures the stability of large concurrent data. 
+
+#### Reference
 
 Dimension | 1.0| 2.0
 --------- | ------------- | -------------
