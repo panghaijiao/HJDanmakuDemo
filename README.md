@@ -27,7 +27,7 @@ HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmaku
 HJDanmakuView *danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
 ```
 
-#### Video Mode (developing)
+#### Video Mode
 
 ```
 // init config with mode HJDanmakuModeVideo
