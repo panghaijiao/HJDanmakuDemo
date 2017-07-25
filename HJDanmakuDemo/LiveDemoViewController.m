@@ -75,15 +75,15 @@
     if (self.index >= self.danmakus.count) {
         return;
     }
-    NSDictionary *danamku = self.danmakus[self.index];
-    NSArray *pArray = [danamku[@"p"] componentsSeparatedByString:@","];
+    NSDictionary *danmaku = self.danmakus[self.index];
+    NSArray *pArray = [danmaku[@"p"] componentsSeparatedByString:@","];
     
     HJDanmakuType type = [pArray[1] integerValue] % 3;
-    DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:type];
-    danmaku.text = danamku[@"m"];
-    danmaku.textFont = [pArray[2] integerValue] == 1 ? [UIFont systemFontOfSize:20]: [UIFont systemFontOfSize:18];
-    danmaku.textColor = [DanmakuFactory colorWithHexStr:pArray[3]];
-    [self.danmakuView sendDanmaku:danmaku forceRender:NO];
+    DemoDanmakuModel *danmakuModel = [[DemoDanmakuModel alloc] initWithType:type];
+    danmakuModel.text = danmaku[@"m"];
+    danmakuModel.textFont = [pArray[2] integerValue] == 1 ? [UIFont systemFontOfSize:20]: [UIFont systemFontOfSize:18];
+    danmakuModel.textColor = [DanmakuFactory colorWithHexStr:pArray[3]];
+    [self.danmakuView sendDanmaku:danmakuModel forceRender:NO];
 }
 
 - (IBAction)onPauseBtnClick:(id)sender {
@@ -91,12 +91,13 @@
 }
 
 - (IBAction)onSendClick:(id)sender {
-    DemoDanmakuModel *danmaku = [[DemoDanmakuModel alloc] initWithType:HJDanmakuTypeLR];
-    danmaku.selfFlag = YES;
-    danmaku.text = @"😊😊olinone.com😊😊";
-    danmaku.textFont = [UIFont systemFontOfSize:20];
-    danmaku.textColor = [UIColor blueColor];
-    [self.danmakuView sendDanmaku:danmaku forceRender:YES];
+    HJDanmakuType type = arc4random() % 3;
+    DemoDanmakuModel *danmakuModel = [[DemoDanmakuModel alloc] initWithType:type];
+    danmakuModel.selfFlag = YES;
+    danmakuModel.text = @"😊😊olinone.com😊😊";
+    danmakuModel.textFont = [UIFont systemFontOfSize:20];
+    danmakuModel.textColor = [UIColor blueColor];
+    [self.danmakuView sendDanmaku:danmakuModel forceRender:YES];
 }
 
 #pragma mark - delegate
@@ -117,6 +118,8 @@
     DemoDanmakuCell *cell = [danmakuView dequeueReusableCellWithIdentifier:@"cell"];
     if (model.selfFlag) {
         cell.zIndex = 30;
+        cell.layer.borderWidth = 0.5;
+        cell.layer.borderColor = [UIColor redColor].CGColor;
     }
     cell.textLabel.font = model.textFont;
     cell.textLabel.textColor = model.textColor;
