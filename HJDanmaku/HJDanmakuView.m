@@ -316,7 +316,6 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 @implementation HJDanmakuView
 
 - (void)dealloc {
-    NSLog(@">>> dealloc");
     HJDispatchQueueRelease(_renderQueue);
 }
 
@@ -342,7 +341,6 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         _reuseLock = OS_SPINLOCK_INIT;
         _renderQueue = dispatch_queue_create("com.olinone.danmaku.renderQueue", DISPATCH_QUEUE_SERIAL);
         dispatch_set_target_queue(_renderQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
-        NSLog(@">>> init");
     }
     return self;
 }
