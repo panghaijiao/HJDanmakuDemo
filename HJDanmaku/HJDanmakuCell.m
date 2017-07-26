@@ -18,7 +18,7 @@
 @implementation HJDanmakuCell
 
 - (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super init]) {
+    if (self = [self init]) {
         self.reuseIdentifier = reuseIdentifier;
     }
     return self;

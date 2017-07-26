@@ -41,6 +41,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     HJDanmakuConfiguration *config = [[HJDanmakuConfiguration alloc] initWithDanmakuMode:HJDanmakuModeLive];
     self.danmakuView = [[HJDanmakuView alloc] initWithFrame:self.view.bounds configuration:config];
     self.danmakuView.dataSource = self;
@@ -128,6 +129,14 @@
     [self.danmakuView play];
 }
 
+- (BOOL)danmakuView:(HJDanmakuView *)danmakuView shouldSelectCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku {
+    return danmaku.danmakuType == HJDanmakuTypeLR;
+}
+
+- (void)danmakuView:(HJDanmakuView *)danmakuView didSelectCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku {
+    NSLog(@"select=> %@", cell.textLabel.text);
+}
+
 #pragma mark - dataSource
 
 - (CGFloat)danmakuView:(HJDanmakuView *)danmakuView widthForDanmaku:(HJDanmakuModel *)danmaku {
@@ -138,6 +147,7 @@
 - (HJDanmakuCell *)danmakuView:(HJDanmakuView *)danmakuView cellForDanmaku:(HJDanmakuModel *)danmaku {
     DemoDanmakuModel *model = (DemoDanmakuModel *)danmaku;
     DemoDanmakuCell *cell = [danmakuView dequeueReusableCellWithIdentifier:@"cell"];
+    cell.selectionStyle = HJDanmakuCellSelectionStyleDefault;
     cell.alpha = self.alphaSlider.value;
     if (model.selfFlag) {
         cell.zIndex = 30;

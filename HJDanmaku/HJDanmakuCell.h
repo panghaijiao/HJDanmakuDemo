@@ -8,9 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, HJDanmakuCellSelectionStyle) {
+    HJDanmakuCellSelectionStyleNone,     // no select.
+    HJDanmakuCellSelectionStyleDefault,
+};
+
 @interface HJDanmakuCell : UIView
 
-@property (nonatomic) NSUInteger zIndex; // Default LR 0  FT/FB 10
+@property (nonatomic) NSUInteger zIndex; // default LR 0  FT/FB 10.
+
+@property (nonatomic) HJDanmakuCellSelectionStyle selectionStyle; // default is HJDanmakuCellSelectionStyleNone.
 
 @property (nonatomic, readonly) UILabel *textLabel;
 

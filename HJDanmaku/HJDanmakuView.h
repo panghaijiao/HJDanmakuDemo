@@ -26,6 +26,10 @@
 - (void)danmakuView:(HJDanmakuView *)danmakuView willDisplayCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku;
 - (void)danmakuView:(HJDanmakuView *)danmakuView didEndDisplayCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku;
 
+// selection customization
+- (BOOL)danmakuView:(HJDanmakuView *)danmakuView shouldSelectCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku;
+- (void)danmakuView:(HJDanmakuView *)danmakuView didSelectCell:(HJDanmakuCell *)cell danmaku:(HJDanmakuModel *)danmaku;
+
 @end
 
 //_______________________________________________________________________________________________________________
