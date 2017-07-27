@@ -7,7 +7,7 @@
 
 A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
 
-![GitHub set up-w140](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmakuDemo.jpg)
+![GitHub](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmaku.png)
 
 ## Overview
 
