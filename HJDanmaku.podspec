@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "HJDanmaku"
   s.version      = "2.0.0"
-  s.summary      = "A short description'"
+  s.summary      = "A high performance danmaku engine for iOS"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-  A short description'
+  A high performance danmaku engine for iOS, http://www.olinone.com/?p=186
                    DESC
 
   s.homepage     = "https://github.com/panghaijiao/HJDanmakuDemo"

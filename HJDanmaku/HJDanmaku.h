@@ -8,6 +8,3 @@
 
 #import "HJDanmakuDefines.h"
 #import "HJDanmakuView.h"
-#import "HJDanmakuModel.h"
-#import "HJDanmakuCell.h"
-#import "HJDanmakuConfiguration"
