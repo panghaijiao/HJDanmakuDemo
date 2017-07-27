@@ -32,6 +32,12 @@
     [self.danmakuView stop];
 }
 
+- (IBAction)onBackClick:(UIButton *)sender {
+    sender.hidden = YES;
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.timer invalidate];

@@ -806,22 +806,11 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 #pragma mark - Touch
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    for (HJDanmakuAgent *danmakuAgent in [self visibleDanmakuAgents]) {
-        CGRect rect = danmakuAgent.danmakuCell.layer.presentationLayer.frame;
-        if (CGRectContainsPoint(rect, point)) {
-            if (danmakuAgent.danmakuCell.selectionStyle == HJDanmakuCellSelectionStyleNone) {
-                CGPoint cellPoint = [self convertPoint:point toView:danmakuAgent.danmakuCell];
-                return [danmakuAgent.danmakuCell hitTest:cellPoint withEvent:event];
-            }
-            return self;
-        }
-    }
-    return [super hitTest:point withEvent:event];
-}
-
 - (HJDanmakuAgent *)danmakuAgentAtPoint:(CGPoint)point {
-    for (HJDanmakuAgent *danmakuAgent in [self visibleDanmakuAgents]) {
+    NSArray *sortDanmakuAgents = [[self visibleDanmakuAgents] sortedArrayUsingComparator:^NSComparisonResult(HJDanmakuAgent *obj1, HJDanmakuAgent *obj2) {
+        return obj1.danmakuCell.zIndex > obj2.danmakuCell.zIndex ? NSOrderedAscending: NSOrderedDescending;
+    }];
+    for (HJDanmakuAgent *danmakuAgent in sortDanmakuAgents) {
         CGRect rect = danmakuAgent.danmakuCell.layer.presentationLayer.frame;
         if (CGRectContainsPoint(rect, point)) {
             return danmakuAgent;
@@ -830,27 +819,39 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     return nil;
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    self.selectDanmakuAgent = nil;
+    HJDanmakuAgent *danmakuAgent = [self danmakuAgentAtPoint:point];
+    if (danmakuAgent) {
+        if (danmakuAgent.danmakuCell.selectionStyle == HJDanmakuCellSelectionStyleDefault) {
+            self.selectDanmakuAgent = danmakuAgent;
+            return self;
+        }
+        CGPoint cellPoint = [self convertPoint:point toView:danmakuAgent.danmakuCell];
+        return [danmakuAgent.danmakuCell hitTest:cellPoint withEvent:event];
+    }
+    return [super hitTest:point withEvent:event];
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    self.selectDanmakuAgent = nil;
-    CGPoint touchPoint = [[touches anyObject] locationInView:self];
-    HJDanmakuAgent *selectDanmakuAgent = [self danmakuAgentAtPoint:touchPoint];
-    if (selectDanmakuAgent) {
+    if (self.selectDanmakuAgent) {
         if ([self.delegate respondsToSelector:@selector(danmakuView:shouldSelectCell:danmaku:)]) {
-            if (![self.delegate danmakuView:self shouldSelectCell:selectDanmakuAgent.danmakuCell danmaku:selectDanmakuAgent.danmakuModel]) {
+            BOOL shouldSelect = [self.delegate danmakuView:self shouldSelectCell:self.selectDanmakuAgent.danmakuCell danmaku:self.selectDanmakuAgent.danmakuModel];
+            if (!shouldSelect) {
+                self.selectDanmakuAgent = nil;
                 return;
             }
         }
-        self.selectDanmakuAgent = selectDanmakuAgent;
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
     if (self.selectDanmakuAgent) {
+        CGRect rect = self.selectDanmakuAgent.danmakuCell.layer.presentationLayer.frame;
         CGPoint touchPoint = [[touches anyObject] locationInView:self];
-        HJDanmakuAgent *selectDanmakuAgent = [self danmakuAgentAtPoint:touchPoint];
-        if (![selectDanmakuAgent isEqual:self.selectDanmakuAgent]) {
+        if (!CGRectContainsPoint(rect, touchPoint)) {
             self.selectDanmakuAgent = nil;
         }
     }
@@ -859,13 +860,13 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
     if (self.selectDanmakuAgent) {
+        CGRect rect = self.selectDanmakuAgent.danmakuCell.layer.presentationLayer.frame;
         CGPoint touchPoint = [[touches anyObject] locationInView:self];
-        HJDanmakuAgent *selectDanmakuAgent = [self danmakuAgentAtPoint:touchPoint];
-        if ([selectDanmakuAgent isEqual:self.selectDanmakuAgent]) {
-            self.selectDanmakuAgent = nil;
+        if (CGRectContainsPoint(rect, touchPoint)) {
             if ([self.delegate respondsToSelector:@selector(danmakuView:didSelectCell:danmaku:)]) {
-                [self.delegate danmakuView:self didSelectCell:selectDanmakuAgent.danmakuCell danmaku:selectDanmakuAgent.danmakuModel];
+                [self.delegate danmakuView:self didSelectCell:self.selectDanmakuAgent.danmakuCell danmaku:self.selectDanmakuAgent.danmakuModel];
             }
+            self.selectDanmakuAgent = nil;
         }
     }
 }
