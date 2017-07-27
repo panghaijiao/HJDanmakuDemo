@@ -33,6 +33,12 @@ Concurrency | ⭐️⭐️ | ⭐️⭐️⭐️⭐️⭐️
 ## Podfile
 
 ```
+pod 'HJDanmaku', '~> 2.0'
+```
+
+#### or
+
+```
 pod 'HJDanmaku', :git => 'https://github.com/panghaijiao/HJDanmakuDemo.git'
 ```
 
