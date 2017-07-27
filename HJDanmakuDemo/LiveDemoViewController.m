@@ -67,6 +67,11 @@
     }
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self.danmakuView sizeToFit];
+}
+
 #pragma mark - 
 
 - (IBAction)onPlayBtnClick:(UIButton *)sender {

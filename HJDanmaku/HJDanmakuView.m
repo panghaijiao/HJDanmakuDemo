@@ -468,6 +468,27 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     });
 }
 
+- (void)sizeToFit {
+    [super sizeToFit];
+    NSArray *danmakuAgents = [self visibleDanmakuAgents];
+    onMainThreadAsync(^{
+        CGFloat midX = CGRectGetMidX(self.bounds);
+        CGFloat height = CGRectGetHeight(self.bounds);
+        for (HJDanmakuAgent *danmakuAgent in danmakuAgents) {
+            if (danmakuAgent.danmakuModel.danmakuType != HJDanmakuTypeLR) {
+                CGPoint centerPoint = danmakuAgent.danmakuCell.center;
+                centerPoint.x = midX;
+                danmakuAgent.danmakuCell.center = centerPoint;
+                if (danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeFB) {
+                    CGRect rect = danmakuAgent.danmakuCell.frame;
+                    rect.origin.y = height - self.configuration.cellHeight * (danmakuAgent.yIdx + 1);
+                    danmakuAgent.danmakuCell.frame = rect;
+                }
+            }
+        }
+    });
+}
+
 #pragma mark -
 
 - (void)preloadDanmakusWhenPrepare {
