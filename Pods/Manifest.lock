@@ -1,5 +1,5 @@
 PODS:
-  - HJDanmaku (0.0.1)
+  - HJDanmaku (2.0.0)
 
 DEPENDENCIES:
   - HJDanmaku (from `./`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  HJDanmaku: d0e12e1b95a80d6db688dc6b4a0115bb054098e3
+  HJDanmaku: ce6b35b77d67cf709a3ef8db77f017db89c78139
 
 PODFILE CHECKSUM: da6a21c2d0b2a4aea606c06aa7ff1952e4bb850a
 
