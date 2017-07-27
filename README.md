@@ -1,4 +1,4 @@
-# HJDanmaku
+![GitHub](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmaku.png)
 
 ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
 ![](https://img.shields.io/badge/Cocoapods-v1.1.1-blue.svg)
@@ -6,8 +6,6 @@
 ![](https://img.shields.io/badge/license-MIT-brightgreen.svg)  
 
 A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
-
-![GitHub](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmaku.png)
 
 ## Overview
 
