@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/language-objc-5787e5.svg)
 ![](https://img.shields.io/badge/license-MIT-brightgreen.svg)  
 
-A high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
+HJDanmaku is a high performance danmaku engine for iOS. For more details please click [here](http://www.olinone.com/?p=186)
 
 ## Overview
 
