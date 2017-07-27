@@ -33,7 +33,6 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 @property (nonatomic, assign) NSInteger toleranceCount;
 @property (nonatomic, assign) CGFloat remainingTime;
-@property (nonatomic, assign) BOOL isShowing;
 
 @property (nonatomic, assign) CGFloat px;
 @property (nonatomic, assign) CGFloat py;
@@ -605,7 +604,6 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             [danmakuAgent.danmakuCell.layer removeAllAnimations];
             [danmakuAgent.danmakuCell removeFromSuperview];
             danmakuAgent.yIdx = -1;
-            danmakuAgent.isShowing = NO;
             danmakuAgent.remainingTime = 0;
             [self recycleCellToReusePool:danmakuAgent.danmakuCell];
             if ([self.delegate respondsToSelector:@selector(danmakuView:didEndDisplayCell:danmaku:)]) {
@@ -651,7 +649,6 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     [self.renderingDanmakus addObject:danmakuAgent];
     danmakuAgent.toleranceCount = 0;
     onMainThreadAsync(^{
-        danmakuAgent.isShowing = YES;
         danmakuAgent.danmakuCell = ({
             HJDanmakuCell *cell = [self.dataSource danmakuView:self cellForDanmaku:danmakuAgent.danmakuModel];
             cell.frame = (CGRect){CGPointMake(danmakuAgent.px, danmakuAgent.py), danmakuAgent.size};
@@ -935,7 +932,16 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 }
 
 - (NSArray *)visibleCells {
-    return [[self visibleDanmakuAgents] valueForKey:@"danmakuCell"];
+    __block NSMutableArray *visibleCells = [NSMutableArray array];
+    dispatch_sync(_renderQueue, ^{
+        [self.renderingDanmakus enumerateObjectsUsingBlock:^(HJDanmakuAgent *danmakuAgent, NSUInteger idx, BOOL * _Nonnull stop) {
+            HJDanmakuCell *cell = danmakuAgent.danmakuCell;
+            if (cell) {
+                [visibleCells addObject:cell];
+            }
+        }];
+    });
+    return visibleCells;
 }
 
 - (NSArray *)visibleDanmakuAgents {
