@@ -86,3 +86,7 @@ HJDanmaku 1.0 was first released in 2015, You can get it in the folder [HJDanmak
 HJDanmakuDemo is released under the MIT license. See LICENSE for details.
 Copyright (c) 2015 olinone.
 
+## Sponsor
+
+![GitHub](http://7pum7o.com1.z0.glb.clouddn.com/zfbwpay340.png)
+
