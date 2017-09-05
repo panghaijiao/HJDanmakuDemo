@@ -286,6 +286,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 @interface HJDanmakuView () {
     OSSpinLock _reuseLock;
     dispatch_queue_t _renderQueue;
+    CGRect _renderBounds;
 }
 
 @property (nonatomic, strong) HJDanmakuConfiguration *configuration;
@@ -574,6 +575,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 }
 
 - (void)renderDanmakusForTime:(HJDanmakuTime)time buffering:(BOOL)isBuffering {
+    _renderBounds = self.bounds;
     dispatch_async(_renderQueue, ^{
         [self renderDisplayingDanmakusForTime:time];
         if (!isBuffering) {
@@ -687,7 +689,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         return NO;
     }
     danmakuAgent.py = py;
-    danmakuAgent.px = danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR ? CGRectGetWidth(self.bounds): (CGRectGetMidX(self.bounds) - danmakuAgent.size.width / 2);
+    danmakuAgent.px = danmakuAgent.danmakuModel.danmakuType == HJDanmakuTypeLR ? CGRectGetWidth(_renderBounds): (CGRectGetMidX(_renderBounds) - danmakuAgent.size.width / 2);
     return YES;
 }
 
@@ -704,7 +706,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 // LR
 - (CGFloat)layoutPyWithLRDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
-    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(self.bounds) / self.configuration.cellHeight);
+    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(_renderBounds) / self.configuration.cellHeight);
     NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
     for (u_int8_t index = 0; index < maxPyIndex; index++) {
         NSNumber *key = @(index);
@@ -733,7 +735,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     if (preDanmakuAgent.remainingTime <= 0) {
         return NO;
     }
-    CGFloat width = CGRectGetWidth(self.bounds);
+    CGFloat width = CGRectGetWidth(_renderBounds);
     CGFloat preDanmakuSpeed = (width + preDanmakuAgent.size.width) / self.configuration.duration;
     if (preDanmakuSpeed * (self.configuration.duration - preDanmakuAgent.remainingTime) < preDanmakuAgent.size.width) {
         return YES;
@@ -747,7 +749,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 // FT
 - (CGFloat)layoutPyWithFTDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
-    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(self.bounds) / 2.0 / self.configuration.cellHeight);
+    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(_renderBounds) / 2.0 / self.configuration.cellHeight);
     NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
     for (u_int8_t index = 0; index < maxPyIndex; index++) {
         NSNumber *key = @(index);
@@ -781,7 +783,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 // FB
 - (CGFloat)layoutPyWithFBDanmaku:(HJDanmakuAgent *)danmakuAgent forTime:(HJDanmakuTime)time {
-    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(self.bounds) / 2.0 / self.configuration.cellHeight);
+    u_int8_t maxPyIndex = self.configuration.numberOfLines > 0 ? self.configuration.numberOfLines: (CGRectGetHeight(_renderBounds) / 2.0 / self.configuration.cellHeight);
     NSMutableDictionary *retainer = [self retainerWithType:danmakuAgent.danmakuModel.danmakuType];
     for (u_int8_t index = 0; index < maxPyIndex; index++) {
         NSNumber *key = @(index);
@@ -789,19 +791,19 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         if (!tempAgent) {
             danmakuAgent.yIdx = index;
             retainer[key] = danmakuAgent;
-            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * (index + 1);
+            return CGRectGetHeight(_renderBounds) - self.configuration.cellHeight * (index + 1);
         }
         if (![self checkFBIsWillHitWithPreDanmaku:tempAgent danmaku:danmakuAgent]) {
             danmakuAgent.yIdx = index;
             retainer[key] = danmakuAgent;
-            return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * (index + 1);
+            return CGRectGetHeight(_renderBounds) - self.configuration.cellHeight * (index + 1);
         }
     }
     if (danmakuAgent.force) {
         u_int8_t index = arc4random() % maxPyIndex;
         danmakuAgent.yIdx = index;
         retainer[@(index)] = danmakuAgent;
-        return CGRectGetHeight(self.bounds) - self.configuration.cellHeight * (index + 1);
+        return CGRectGetHeight(_renderBounds) - self.configuration.cellHeight * (index + 1);
     }
     return -1;
 }
