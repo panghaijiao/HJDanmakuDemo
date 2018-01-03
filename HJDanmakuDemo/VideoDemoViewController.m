@@ -47,6 +47,10 @@
     self.danmakuView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view insertSubview:self.danmakuView aboveSubview:self.imageView];
     
+    [self loadDanmakusFromFile];
+}
+
+- (void)loadDanmakusFromFile {
     NSString *danmakufile = [[NSBundle mainBundle] pathForResource:@"danmakufile" ofType:nil];
     NSArray *danmakus = [NSArray arrayWithContentsOfFile:danmakufile];
     NSMutableArray *danmakuModels = [NSMutableArray arrayWithCapacity:danmakus.count];

@@ -60,7 +60,10 @@
 - (void)pause;
 - (void)stop;
 
+// reset and clear all danmakus, must call -prepareDanmakus before -play once again
+- (void)reset;
 - (void)clearScreen;
+
 
 /* send customization. when force, renderer will draw the danmaku immediately and ignore the maximum quantity limit.
    you should call -sendDanmakus: instead of -sendDanmaku:forceRender: to send the danmakus from a remote servers

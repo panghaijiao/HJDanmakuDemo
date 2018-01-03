@@ -79,6 +79,8 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 - (NSArray *)fetchDanmakuAgentsForTime:(HJDanmakuTime)time;
 
+- (void)reset;
+
 @end
 
 @implementation HJDanmakuSource
@@ -111,6 +113,12 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 - (NSArray *)fetchDanmakuAgentsForTime:(HJDanmakuTime)time {
     NSAssert(NO, @"subClass implementation");
     return nil;
+}
+
+- (void)reset {
+    OSSpinLockLock(&_spinLock);
+    self.danmakuAgents = [NSMutableArray array];
+    OSSpinLockUnlock(&_spinLock);
 }
 
 @end
@@ -211,6 +219,11 @@ static inline void onGlobalThreadAsync(void (^block)()) {
     self.lastIndex = indexSet.firstIndex;
     OSSpinLockUnlock(&_spinLock);
     return danmakuAgents;
+}
+
+- (void)reset {
+    [super reset];
+    self.lastIndex = 0;
 }
 
 @end
@@ -456,6 +469,12 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         [self.danmakuQueuePool removeAllObjects];
     });
     [self clearScreen];
+}
+
+- (void)reset {
+    [self stop];
+    [self.danmakuSource reset];
+    self.isPrepared = NO;
 }
 
 - (void)clearScreen {
