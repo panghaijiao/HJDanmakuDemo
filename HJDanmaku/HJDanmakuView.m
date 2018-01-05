@@ -869,7 +869,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
         CGPoint cellPoint = [self convertPoint:point toView:danmakuAgent.danmakuCell];
         return [danmakuAgent.danmakuCell hitTest:cellPoint withEvent:event];
     }
-    return [super hitTest:point withEvent:event];
+    return self.traverseTouches ? nil: [super hitTest:point withEvent:event];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

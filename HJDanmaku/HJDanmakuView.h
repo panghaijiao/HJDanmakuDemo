@@ -44,6 +44,9 @@
 @property (readonly) BOOL isPrepared;
 @property (readonly) BOOL isPlaying;
 
+// traverse touches outside of the danmaku view, default NO
+@property (nonatomic, assign) BOOL traverseTouches;
+
 - (instancetype)initWithFrame:(CGRect)frame configuration:(HJDanmakuConfiguration *)configuration;
 
 - (void)registerClass:(Class)cellClass forCellReuseIdentifier:(NSString *)identifier;
