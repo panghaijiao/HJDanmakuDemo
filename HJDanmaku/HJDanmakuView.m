@@ -13,12 +13,12 @@
 
 static const CGFloat HJFrameInterval = 0.2;
 
-static inline void onMainThreadAsync(void (^block)()) {
+static inline void onMainThreadAsync(void (^block)(void)) {
     if ([NSThread isMainThread]) block();
     else dispatch_async(dispatch_get_main_queue(), block);
 }
 
-static inline void onGlobalThreadAsync(void (^block)()) {
+static inline void onGlobalThreadAsync(void (^block)(void)) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
 }
 
@@ -141,10 +141,10 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             [danmakuAgents addObject:agent];
         }];
         NSArray *sortDanmakuAgents = [danmakuAgents sortedArrayUsingSelector:@selector(compare:)];
-        OSSpinLockLock(&_spinLock);
+        OSSpinLockLock(&self->_spinLock);
         self.danmakuAgents = [NSMutableArray arrayWithArray:sortDanmakuAgents];
         self.lastIndex = 0;
-        OSSpinLockUnlock(&_spinLock);
+        OSSpinLockUnlock(&self->_spinLock);
         if (completion) {
             completion();
         }
@@ -177,18 +177,18 @@ static inline void onGlobalThreadAsync(void (^block)()) {
 
 - (void)sendDanmakus:(NSArray<HJDanmakuModel *> *)danmakus {
     onGlobalThreadAsync(^{
-        OSSpinLockLock(&_spinLock);
+        OSSpinLockLock(&self->_spinLock);
         NSMutableArray *danmakuAgents = [NSMutableArray arrayWithArray:self.danmakuAgents];
-        OSSpinLockUnlock(&_spinLock);
+        OSSpinLockUnlock(&self->_spinLock);
         [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
             HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
             [danmakuAgents addObject:danmakuAgent];
         }];
         NSArray *sortDanmakuAgents = [danmakuAgents sortedArrayUsingSelector:@selector(compare:)];
-        OSSpinLockLock(&_spinLock);
+        OSSpinLockLock(&self->_spinLock);
         self.danmakuAgents = [NSMutableArray arrayWithArray:sortDanmakuAgents];
         self.lastIndex = 0;
-        OSSpinLockUnlock(&_spinLock);
+        OSSpinLockUnlock(&self->_spinLock);
     });
 }
 
@@ -243,9 +243,9 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
             [danmakuAgents addObject:danmakuAgent];
         }];
-        OSSpinLockLock(&_spinLock);
+        OSSpinLockLock(&self->_spinLock);
         self.danmakuAgents = danmakuAgents;
-        OSSpinLockUnlock(&_spinLock);
+        OSSpinLockUnlock(&self->_spinLock);
         if (completion) {
             completion();
         }
@@ -269,9 +269,9 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
             [danmakuAgents addObject:agent];
             if (idx == lastIndex || danmakuAgents.count % interval == 0) {
-                OSSpinLockLock(&_spinLock);
+                OSSpinLockLock(&self->_spinLock);
                 [self.danmakuAgents addObjectsFromArray:danmakuAgents];
-                OSSpinLockUnlock(&_spinLock);
+                OSSpinLockUnlock(&self->_spinLock);
                 [danmakuAgents removeAllObjects];
             }
         }];
@@ -517,7 +517,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             danmakuAgent.remainingTime = self.configuration.duration;
             danmakuAgent.toleranceCount = self.toleranceCount;
         }
-        dispatch_async(_renderQueue, ^{
+        dispatch_async(self->_renderQueue, ^{
             [self.danmakuQueuePool addObjectsFromArray:danmakuAgents];
         });
     }];
@@ -579,7 +579,7 @@ static inline void onGlobalThreadAsync(void (^block)()) {
             danmakuAgent.remainingTime = self.configuration.duration;
             danmakuAgent.toleranceCount = self.toleranceCount;
         }
-        dispatch_async(_renderQueue, ^{
+        dispatch_async(self->_renderQueue, ^{
             if (time.time < self.playTime.time || time.time > HJMaxTime(self.playTime) + self.configuration.tolerance) {
                 [self.danmakuQueuePool removeAllObjects];
             }

@@ -214,7 +214,7 @@
     if (_timeCount > DanmakuFilterInterval) {
         _timeCount = 0;
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSArray *filterArray = [self.danmakuFilter filterDanmakus:self.danmakus time:_danmakuTime];
+            NSArray *filterArray = [self.danmakuFilter filterDanmakus:self.danmakus time:self->_danmakuTime];
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.curDanmakus = filterArray;
             });
