@@ -1,4 +1,4 @@
-![GitHub](http://7pum7o.com1.z0.glb.clouddn.com/HJDanmakuLogo.png)
+![GitHub](http://shenmaip.com/HJDanmakuLogo.png)
 
 ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
 ![](https://img.shields.io/badge/Cocoapods-v1.1.1-blue.svg)
