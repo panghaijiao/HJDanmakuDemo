@@ -1,4 +1,4 @@
-![GitHub](http://shenmaip.com/HJDanmakuLogo.png)
+![GitHub](http://cdn.olinone.com/HJDanmakuLogo.png)
 
 ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
 ![](https://img.shields.io/badge/Cocoapods-v1.1.1-blue.svg)
@@ -90,5 +90,5 @@ Copyright (c) 2015 olinone.
 
 ## Sponsor
 
-![GitHub](http://shenmaip.com/zfbwpay340.png)
+![GitHub](http://cdn.olinone.com/zfbwpay340.png)
 
