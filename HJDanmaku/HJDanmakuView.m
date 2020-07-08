@@ -7,7 +7,7 @@
 //
 
 #import "HJDanmakuView.h"
-#import <libkern/OSAtomic.h>
+#import <os/lock.h>
 
 @class HJDanmakuRetainer;
 
@@ -66,7 +66,7 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 //_______________________________________________________________________________________________________________
 
 @interface HJDanmakuSource : NSObject {
-    OSSpinLock _spinLock;
+    os_unfair_lock _spinLock;
 }
 
 @property (nonatomic, strong) NSMutableArray <HJDanmakuAgent *> *danmakuAgents;
@@ -92,7 +92,7 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 
 - (instancetype)init {
     if (self = [super init]) {
-        _spinLock = OS_SPINLOCK_INIT;
+        _spinLock = OS_UNFAIR_LOCK_INIT;
         self.danmakuAgents = [NSMutableArray array];
     }
     return self;
@@ -116,9 +116,9 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 }
 
 - (void)reset {
-    OSSpinLockLock(&_spinLock);
+    os_unfair_lock_lock(&_spinLock);
     self.danmakuAgents = [NSMutableArray array];
-    OSSpinLockUnlock(&_spinLock);
+    os_unfair_lock_unlock(&_spinLock);
 }
 
 @end
@@ -141,10 +141,10 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
             [danmakuAgents addObject:agent];
         }];
         NSArray *sortDanmakuAgents = [danmakuAgents sortedArrayUsingSelector:@selector(compare:)];
-        OSSpinLockLock(&self->_spinLock);
+        os_unfair_lock_lock(&self->_spinLock);
         self.danmakuAgents = [NSMutableArray arrayWithArray:sortDanmakuAgents];
         self.lastIndex = 0;
-        OSSpinLockUnlock(&self->_spinLock);
+        os_unfair_lock_unlock(&self->_spinLock);
         if (completion) {
             completion();
         }
@@ -154,11 +154,11 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 - (void)sendDanmaku:(HJDanmakuModel *)danmaku forceRender:(BOOL)force {
     HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
     danmakuAgent.force = force;
-    OSSpinLockLock(&_spinLock);
+    os_unfair_lock_lock(&_spinLock);
     NSUInteger index = [self indexOfDanmakuAgent:danmakuAgent];
     [self.danmakuAgents insertObject:danmakuAgent atIndex:index];
     self.lastIndex = 0;
-    OSSpinLockUnlock(&_spinLock);
+    os_unfair_lock_unlock(&_spinLock);
 }
 
 - (NSUInteger)indexOfDanmakuAgent:(HJDanmakuAgent *)danmakuAgent {
@@ -177,26 +177,26 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 
 - (void)sendDanmakus:(NSArray<HJDanmakuModel *> *)danmakus {
     onGlobalThreadAsync(^{
-        OSSpinLockLock(&self->_spinLock);
+        os_unfair_lock_lock(&self->_spinLock);
         NSMutableArray *danmakuAgents = [NSMutableArray arrayWithArray:self.danmakuAgents];
-        OSSpinLockUnlock(&self->_spinLock);
+        os_unfair_lock_unlock(&self->_spinLock);
         [danmakus enumerateObjectsUsingBlock:^(HJDanmakuModel *danmaku, NSUInteger idx, BOOL *stop) {
             HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
             [danmakuAgents addObject:danmakuAgent];
         }];
         NSArray *sortDanmakuAgents = [danmakuAgents sortedArrayUsingSelector:@selector(compare:)];
-        OSSpinLockLock(&self->_spinLock);
+        os_unfair_lock_lock(&self->_spinLock);
         self.danmakuAgents = [NSMutableArray arrayWithArray:sortDanmakuAgents];
         self.lastIndex = 0;
-        OSSpinLockUnlock(&self->_spinLock);
+        os_unfair_lock_unlock(&self->_spinLock);
     });
 }
 
 - (NSArray *)fetchDanmakuAgentsForTime:(HJDanmakuTime)time {
-    OSSpinLockLock(&_spinLock);
+    os_unfair_lock_lock(&_spinLock);
     NSUInteger lastIndex = self.lastIndex < self.danmakuAgents.count ? self.lastIndex: NSNotFound;
     if (lastIndex == NSNotFound) {
-        OSSpinLockUnlock(&_spinLock);
+        os_unfair_lock_unlock(&_spinLock);
         return nil;
     }
     HJDanmakuAgent *lastDanmakuAgent = self.danmakuAgents[self.lastIndex];
@@ -212,12 +212,12 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
         return danmakuAgent.remainingTime <= 0 && danmakuAgent.danmakuModel.time >= minTime && danmakuAgent.danmakuModel.time < maxTime;
     }];
     if (indexSet.count == 0) {
-        OSSpinLockUnlock(&_spinLock);
+        os_unfair_lock_unlock(&_spinLock);
         return nil;
     }
     NSArray *danmakuAgents = [self.danmakuAgents objectsAtIndexes:indexSet];
     self.lastIndex = indexSet.firstIndex;
-    OSSpinLockUnlock(&_spinLock);
+    os_unfair_lock_unlock(&_spinLock);
     return danmakuAgents;
 }
 
@@ -243,9 +243,9 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
             HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
             [danmakuAgents addObject:danmakuAgent];
         }];
-        OSSpinLockLock(&self->_spinLock);
+        os_unfair_lock_lock(&self->_spinLock);
         self.danmakuAgents = danmakuAgents;
-        OSSpinLockUnlock(&self->_spinLock);
+        os_unfair_lock_unlock(&self->_spinLock);
         if (completion) {
             completion();
         }
@@ -255,9 +255,9 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 - (void)sendDanmaku:(HJDanmakuModel *)danmaku forceRender:(BOOL)force {
     HJDanmakuAgent *danmakuAgent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
     danmakuAgent.force = force;
-    OSSpinLockLock(&_spinLock);
+    os_unfair_lock_lock(&_spinLock);
     [self.danmakuAgents addObject:danmakuAgent];
-    OSSpinLockUnlock(&_spinLock);
+    os_unfair_lock_unlock(&_spinLock);
 }
 
 - (void)sendDanmakus:(NSArray<HJDanmakuModel *> *)danmakus {
@@ -269,9 +269,9 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
             HJDanmakuAgent *agent = [[HJDanmakuAgent alloc] initWithDanmakuModel:danmaku];
             [danmakuAgents addObject:agent];
             if (idx == lastIndex || danmakuAgents.count % interval == 0) {
-                OSSpinLockLock(&self->_spinLock);
+                os_unfair_lock_lock(&self->_spinLock);
                 [self.danmakuAgents addObjectsFromArray:danmakuAgents];
-                OSSpinLockUnlock(&self->_spinLock);
+                os_unfair_lock_unlock(&self->_spinLock);
                 [danmakuAgents removeAllObjects];
             }
         }];
@@ -279,10 +279,10 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 }
 
 - (NSArray *)fetchDanmakuAgentsForTime:(HJDanmakuTime)time {
-    OSSpinLockLock(&_spinLock);
+    os_unfair_lock_lock(&_spinLock);
     NSArray *danmakuAgents = [self.danmakuAgents copy];
     [self.danmakuAgents removeAllObjects];
-    OSSpinLockUnlock(&_spinLock);
+    os_unfair_lock_unlock(&_spinLock);
     return danmakuAgents;
 }
 
@@ -297,7 +297,7 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
 #endif
 
 @interface HJDanmakuView () {
-    OSSpinLock _reuseLock;
+    os_unfair_lock _reuseLock;
     dispatch_queue_t _renderQueue;
     CGRect _renderBounds;
 }
@@ -353,7 +353,7 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
         self.sourceQueue.name = @"com.olinone.danmaku.sourceQueue";
         self.sourceQueue.maxConcurrentOperationCount = 1;
         
-        _reuseLock = OS_SPINLOCK_INIT;
+        _reuseLock = OS_UNFAIR_LOCK_INIT;
         _renderQueue = dispatch_queue_create("com.olinone.danmaku.renderQueue", DISPATCH_QUEUE_SERIAL);
         dispatch_set_target_queue(_renderQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
     }
@@ -378,10 +378,10 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
         Class cellClass = self.cellClassInfo[identifier];
         return cellClass ? [[cellClass alloc] initWithReuseIdentifier:identifier]: nil;
     }
-    OSSpinLockLock(&_reuseLock);
+    os_unfair_lock_lock(&_reuseLock);
     HJDanmakuCell *cell = cells.lastObject;
     [cells removeLastObject];
-    OSSpinLockUnlock(&_reuseLock);
+    os_unfair_lock_unlock(&_reuseLock);
     cell.zIndex = 0;
     [cell prepareForReuse];
     return cell;
@@ -392,14 +392,14 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
     if (!identifier) {
         return;
     }
-    OSSpinLockLock(&_reuseLock);
+    os_unfair_lock_lock(&_reuseLock);
     NSMutableArray *cells = self.cellReusePool[identifier];
     if (!cells) {
         cells = [NSMutableArray array];
         self.cellReusePool[identifier] = cells;
     }
     [cells addObject:danmakuCell];
-    OSSpinLockUnlock(&_reuseLock);
+    os_unfair_lock_unlock(&_reuseLock);
 }
 
 #pragma mark -

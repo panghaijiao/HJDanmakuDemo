@@ -165,7 +165,7 @@
     self.isPlaying = YES;
     if (!_displayLink) {
         _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(onTimeCount)];
-        _displayLink.frameInterval = 60.0 * _frameInterval;
+        _displayLink.preferredFramesPerSecond = 60.0 * _frameInterval;
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
     _displayLink.paused = NO;
