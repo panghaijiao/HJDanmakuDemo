@@ -445,7 +445,7 @@ static inline void onGlobalThreadAsync(void (^block)(void)) {
     [self resumeDisplayingDanmakus];
     if (!self.displayLink) {
         self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(update)];
-        self.displayLink.frameInterval = 60.0 * HJFrameInterval;
+        self.displayLink.preferredFramesPerSecond = 1.0 / HJFrameInterval;
         [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
     self.displayLink.paused = NO;

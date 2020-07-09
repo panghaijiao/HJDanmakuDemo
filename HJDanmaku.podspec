@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "HJDanmaku"
-  s.version      = "2.0.5"
+  s.version      = "2.0.6"
   s.summary      = "A high performance danmaku engine for iOS"
 
   # This description is used to generate tags and improve search results.
@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/panghaijiao/HJDanmakuDemo.git", :tag => "2.0.5" }
+  s.source       = { :git => "https://github.com/panghaijiao/HJDanmakuDemo.git", :tag => "2.0.6" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
